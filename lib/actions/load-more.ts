@@ -1,14 +1,20 @@
 "use server";
 
 import { getTransactions } from "@/lib/queries/transactions";
-import type { Transaction } from "@/lib/types/transaction";
+import type { Transaction, TransactionFilters } from "@/lib/types/transaction";
 
 /**
  * Server action to load more transactions for infinite scroll.
+ * Now accepts filters for filtered pagination.
  */
 export async function loadMoreTransactions(
-  offset: number
+  offset: number,
+  filters?: TransactionFilters
 ): Promise<Transaction[]> {
-  const { data } = await getTransactions({ offset, limit: 20 });
+  const { data } = await getTransactions({
+    ...filters,
+    offset,
+    limit: 20,
+  });
   return data;
 }
