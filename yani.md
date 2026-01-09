@@ -5,3 +5,4 @@ Main Functions
 
 To do
 - implement the analytics
+- select day or week or month for simple breakdown
