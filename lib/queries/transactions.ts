@@ -150,3 +150,26 @@ export async function getMonthlyTotals(
 
   return { data: Array.from(aggregated.values()), error: null };
 }
+
+/**
+ * Get recent transactions for dashboard view.
+ * Simple query without complex filters.
+ */
+export async function getRecentTransactions(
+  limit: number = 15
+): Promise<{ data: Transaction[]; error: Error | null }> {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("transactions")
+    .select("*")
+    .is("deleted_at", null)
+    .order("date", { ascending: false })
+    .order("created_at", { ascending: false })
+    .limit(limit);
+
+  return {
+    data: (data as Transaction[]) ?? [],
+    error: error ? new Error(error.message) : null,
+  };
+}

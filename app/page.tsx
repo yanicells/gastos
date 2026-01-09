@@ -1,11 +1,15 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { transactionTypes, type TransactionTypeKey } from "@/lib/data/types";
+import { getRecentTransactions } from "@/lib/queries/transactions";
+import { QuickAddForm } from "@/components/dashboard/quick-add-form";
+import { RecentTransactions } from "@/components/dashboard/recent-transactions";
+import { LogoutButton } from "@/components/logout-button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 /**
- * Simple test page to verify Supabase connection and transactions table
+ * Dashboard page - quick add form and recent transactions.
  */
-export default async function HomePage() {
+export default async function DashboardPage() {
   const supabase = await createClient();
 
   // Check auth
@@ -14,82 +18,48 @@ export default async function HomePage() {
     redirect("/auth/login");
   }
 
-  // Fetch transactions
-  const { data: transactions, error } = await supabase
-    .from("transactions")
-    .select("*")
-    .is("deleted_at", null)
-    .order("date", { ascending: false })
-    .limit(10);
+  // Fetch recent transactions
+  const { data: transactions } = await getRecentTransactions(15);
 
   return (
-    <div className="min-h-svh p-8">
-      <div className="mx-auto max-w-3xl space-y-6">
-        <div>
-          <h1 className="text-2xl font-bold">Database Connection Test</h1>
-          <p className="text-muted-foreground">
-            Logged in as: {authData.claims.email}
-          </p>
+    <div className="min-h-svh bg-background">
+      {/* Header */}
+      <header className="border-b">
+        <div className="container mx-auto flex h-14 items-center justify-between px-4">
+          <h1 className="text-lg font-semibold">Gastos</h1>
+          <div className="flex items-center gap-4">
+            <span className="text-sm text-muted-foreground">
+              {authData.claims.email}
+            </span>
+            <LogoutButton />
+          </div>
         </div>
+      </header>
 
-        <div className="rounded-lg border p-4">
-          <h2 className="mb-4 font-semibold">Recent Transactions</h2>
+      {/* Main Content */}
+      <main className="container mx-auto px-4 py-6">
+        <div className="grid gap-6 lg:grid-cols-3">
+          {/* Quick Add Form */}
+          <Card className="lg:col-span-1">
+            <CardHeader>
+              <CardTitle>Add Transaction</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <QuickAddForm />
+            </CardContent>
+          </Card>
 
-          {error ? (
-            <div className="rounded bg-destructive/10 p-4 text-destructive">
-              <p className="font-medium">Error fetching transactions:</p>
-              <pre className="mt-2 text-sm">
-                {JSON.stringify(error, null, 2)}
-              </pre>
-            </div>
-          ) : transactions && transactions.length > 0 ? (
-            <div className="space-y-2">
-              {transactions.map((t) => {
-                const typeConfig =
-                  transactionTypes[t.type as TransactionTypeKey];
-                return (
-                  <div
-                    key={t.id}
-                    className="flex items-center justify-between rounded border p-3"
-                  >
-                    <div>
-                      <span
-                        className="mr-2 inline-block rounded px-2 py-0.5 text-xs font-medium text-white"
-                        style={{
-                          backgroundColor: typeConfig?.color ?? "#6b7280",
-                        }}
-                      >
-                        {typeConfig?.label ?? t.type}
-                      </span>
-                      <span className="text-sm text-muted-foreground">
-                        {t.date}
-                      </span>
-                    </div>
-                    <span className="font-mono font-medium">
-                      ₱{Number(t.amount).toLocaleString()}
-                    </span>
-                  </div>
-                );
-              })}
-            </div>
-          ) : (
-            <p className="text-muted-foreground">
-              No transactions yet. The table is empty but connection works! ✓
-            </p>
-          )}
+          {/* Recent Transactions */}
+          <Card className="lg:col-span-2">
+            <CardHeader>
+              <CardTitle>Recent Transactions</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <RecentTransactions initialTransactions={transactions} />
+            </CardContent>
+          </Card>
         </div>
-
-        <div className="rounded-lg border bg-muted/50 p-4">
-          <h2 className="mb-2 font-semibold">Debug Info</h2>
-          <pre className="overflow-auto text-xs">
-            {JSON.stringify(
-              { transactionCount: transactions?.length ?? 0, error },
-              null,
-              2
-            )}
-          </pre>
-        </div>
-      </div>
+      </main>
     </div>
   );
 }
