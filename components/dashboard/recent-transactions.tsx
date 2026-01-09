@@ -66,7 +66,7 @@ export function RecentTransactions({
             <TableHead>Type</TableHead>
             <TableHead className="text-right">Amount</TableHead>
             <TableHead>Notes</TableHead>
-            <TableHead className="w-[50px]"></TableHead>
+            <TableHead className="w-12"></TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -92,7 +92,7 @@ export function RecentTransactions({
                     {isExpense ? "-" : "+"}₱{Number(t.amount).toLocaleString()}
                   </span>
                 </TableCell>
-                <TableCell className="max-w-[200px] truncate text-muted-foreground">
+                <TableCell className="max-w-48 truncate text-muted-foreground">
                   {t.notes || "—"}
                 </TableCell>
                 <TableCell>

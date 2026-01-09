@@ -18,12 +18,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
-  transactionTypes,
   expenseTypes,
   incomeTypes,
   type TransactionTypeKey,
 } from "@/lib/data/types";
 import { createTransaction } from "@/lib/actions/transactions";
+import { parseAmount } from "@/lib/utils/calculate";
 
 /**
  * Quick add transaction form for dashboard.
@@ -36,6 +36,9 @@ export function QuickAddForm() {
   const [notes, setNotes] = React.useState("");
   const [error, setError] = React.useState<string | null>(null);
 
+  // Calculate parsed amount for display
+  const parsedAmount = parseAmount(amount);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
@@ -45,8 +48,7 @@ export function QuickAddForm() {
       return;
     }
 
-    const parsedAmount = parseFloat(amount);
-    if (isNaN(parsedAmount) || parsedAmount <= 0) {
+    if (parsedAmount === null || parsedAmount <= 0) {
       setError("Please enter a valid amount");
       return;
     }
@@ -127,14 +129,20 @@ export function QuickAddForm() {
         <Label htmlFor="amount">Amount</Label>
         <Input
           id="amount"
-          type="number"
-          step="0.01"
-          min="0"
-          placeholder="0.00"
+          type="text"
+          inputMode="decimal"
+          placeholder="0"
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
+          className="[appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
           required
         />
+        {/* Show calculated result when expression is entered */}
+        {amount && parsedAmount !== null && amount.match(/[+\-*/]/) && (
+          <p className="text-sm text-muted-foreground">
+            = ₱{parsedAmount.toLocaleString()}
+          </p>
+        )}
       </div>
 
       {/* Notes */}
