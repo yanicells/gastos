@@ -40,6 +40,7 @@ A web app to replace Excel-based expense tracking with a modern, mobile-friendly
   - `softDeleteTransaction()`
   - `softDeleteBatch()`
   - `restoreTransaction()`
+- [x] Load-more action (`lib/actions/load-more.ts`) for infinite scroll with filters
 - [x] TypeScript types (`lib/types/transaction.ts`)
 - [x] Math expression parser (`lib/utils/calculate.ts`)
 
@@ -49,8 +50,22 @@ A web app to replace Excel-based expense tracking with a modern, mobile-friendly
   - `DatePicker` with dark mode support
 - [x] Dashboard components:
   - `QuickAddForm` with math expression support (e.g., `100+50`)
-  - `RecentTransactions` table with delete functionality
+  - `RecentTransactions` table with edit/delete functionality
+  - `EditTransactionModal` for editing transactions
+  - `MonthlySummary` placeholder
+- [x] Transaction components:
+  - `TransactionList` with infinite scroll
+  - `TransactionFilters` (Reddit-style filter bar)
+
+**Pages:**
+
 - [x] Dashboard page (`app/page.tsx`)
+  - Split-view layout: Left (Quick Add), Right (Summary placeholder), Bottom (Recent Transactions)
+  - Navigation to transactions page
+- [x] Transactions page (`app/transactions/page.tsx`)
+  - Full transaction list with infinite scroll
+  - Reddit-style filters (category pills, type dropdown, date range, search)
+  - Edit and delete with confirmation dialogs
 
 **UI Improvements:**
 
@@ -58,20 +73,19 @@ A web app to replace Excel-based expense tracking with a modern, mobile-friendly
 - [x] Number input spinners removed
 - [x] Calendar dark mode fixed (removed background boxing)
 - [x] Math expression evaluation in amount field with live preview
-
-### In Progress
-
-None - Phase 2 complete, ready for Phase 3
+- [x] Edit modal for transactions
+- [x] Delete confirmation dialog
+- [x] Filter-aware infinite scroll
 
 ### Pending
 
 #### Phase 3: Summary & Analytics
 
-- [ ] Excel-style monthly summary view (`app/(protected)/summary/page.tsx`)
+- [ ] Excel-style monthly summary view
   - Year dropdown selector
   - Rows: Months (Jan-Dec + Total)
   - Columns: Expense groups | Revenue groups | Savings
-- [ ] Analytics dashboard (`app/(protected)/charts/page.tsx`)
+- [ ] Analytics dashboard
   - Monthly totals bar chart
   - Category breakdown pie chart
   - Expense trends line chart
@@ -121,12 +135,13 @@ None - Phase 2 complete, ready for Phase 3
 
 ```
 app/
-├── page.tsx                     # Dashboard
+├── page.tsx                     # Dashboard (split-view)
+├── transactions/
+│   └── page.tsx                 # Full transaction list
 ├── auth/
 │   ├── login/                   # Login page
 │   ├── oauth/                   # OAuth callback
 │   └── error/                   # Auth error
-├── protected/                   # Future protected pages
 └── unauthorized/                # Access denied page
 
 components/
@@ -134,12 +149,18 @@ components/
 │   └── date-picker.tsx          # Reusable date picker
 ├── dashboard/
 │   ├── quick-add-form.tsx       # Transaction form
-│   └── recent-transactions.tsx  # Transactions table
+│   ├── recent-transactions.tsx  # Recent transactions table
+│   ├── edit-transaction-modal.tsx # Edit modal
+│   └── monthly-summary.tsx      # Summary placeholder
+├── transactions/
+│   ├── transaction-list.tsx     # Infinite scroll list
+│   └── transaction-filters.tsx  # Filter bar
 └── ui/                          # shadcn components
 
 lib/
 ├── actions/
-│   └── transactions.ts          # Server actions (CRUD)
+│   ├── transactions.ts          # Server actions (CRUD)
+│   └── load-more.ts             # Infinite scroll loader
 ├── queries/
 │   ├── transactions.ts          # Transaction queries
 │   └── analytics.ts             # Aggregation queries

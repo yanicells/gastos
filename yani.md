@@ -4,3 +4,4 @@ Main Functions
 - charts and graph with filters (types, period (month, week, year))
 
 To do
+- implement the analytics
