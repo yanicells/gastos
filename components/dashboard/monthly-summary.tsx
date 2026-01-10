@@ -1,7 +1,7 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card, CardContent } from "@/components/ui/card";
+
 import {
   Table,
   TableBody,
@@ -36,26 +36,9 @@ function formatCurrency(amount: number): string {
 export function SummaryStats({ currentMonth, averages }: SummaryStatsProps) {
   return (
     <Card className="h-full">
-      <CardHeader className="pb-3">
-        <div className="flex items-center justify-between">
-          <CardTitle>Summary</CardTitle>
-          <Tabs defaultValue="this-month" className="w-auto">
-            <TabsList className="grid grid-cols-2">
-              <TabsTrigger value="this-month">This Month</TabsTrigger>
-              <TabsTrigger value="averages">Averages</TabsTrigger>
-            </TabsList>
-          </Tabs>
-        </div>
-      </CardHeader>
-      <CardContent>
-        <Tabs defaultValue="this-month" className="w-full">
-          <TabsContent value="this-month" className="mt-0">
-            <ThisMonthView stats={currentMonth} />
-          </TabsContent>
-          <TabsContent value="averages" className="mt-0">
-            <AveragesView averages={averages} />
-          </TabsContent>
-        </Tabs>
+      <CardContent className="space-y-6 pt-6">
+        <ThisMonthView stats={currentMonth} />
+        <AveragesView averages={averages} />
       </CardContent>
     </Card>
   );
@@ -66,7 +49,7 @@ export function SummaryStats({ currentMonth, averages }: SummaryStatsProps) {
  */
 function ThisMonthView({ stats }: { stats: PeriodStats }) {
   return (
-    <div className="grid gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
       <StatCard
         label="Income"
         value={stats.income}
@@ -109,14 +92,18 @@ function StatCard({
   bgColor: string;
 }) {
   return (
-    <div className="flex items-center justify-between p-3 rounded-lg border">
-      <div className="flex items-center gap-3">
-        <div className={`p-2 rounded-md ${bgColor} ${color}`}>{icon}</div>
-        <span className="font-medium">{label}</span>
+    <div className="flex flex-col gap-2 p-4 rounded-xl border bg-card/50 shadow-sm transition-all hover:bg-accent/50">
+      <div className="flex items-center gap-2 text-muted-foreground">
+        <div className={`p-1.5 rounded-md ${bgColor} ${color} bg-background`}>
+          {icon}
+        </div>
+        <span className="text-sm font-medium">{label}</span>
       </div>
-      <span className={`text-lg font-bold tabular-nums ${color}`}>
-        {formatCurrency(value)}
-      </span>
+      <div className="flex items-baseline gap-1">
+        <span className={`text-2xl font-bold tracking-tight ${color}`}>
+          {formatCurrency(value)}
+        </span>
+      </div>
     </div>
   );
 }
