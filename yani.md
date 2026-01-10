@@ -6,3 +6,10 @@ Main Functions
 To do
 - implement the analytics
 - select day or week or month for simple breakdown
+
+Simple stats (for dashboard)
+- like averages per month day week 
+- current month stats - expenses, income, savings
+
+Future
+- maybe have another table for analytics stuff - so that less queries are needed
