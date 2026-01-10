@@ -16,6 +16,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Gastos",
+  manifest: "/manifest.json",
   robots: {
     index: false,
     follow: false,
