@@ -187,101 +187,105 @@ export function TransactionList({
         </div>
       ) : (
         <>
-          <div className="rounded-lg border">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Date</TableHead>
-                  <TableHead>Type</TableHead>
-                  <TableHead className="text-right">Amount</TableHead>
-                  <TableHead>Notes</TableHead>
-                  <TableHead className="w-20"></TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {transactions.map((t) => {
-                  const typeConfig =
-                    transactionTypes[t.type as TransactionTypeKey];
-                  const isExpense = typeConfig?.category === "expense";
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-[120px] whitespace-nowrap">
+                  Date
+                </TableHead>
+                <TableHead className="w-[1%] whitespace-nowrap">Type</TableHead>
+                <TableHead className="w-[1%] whitespace-nowrap text-right">
+                  Amount
+                </TableHead>
+                <TableHead className="pl-12">Notes</TableHead>
+                <TableHead className="w-20"></TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {transactions.map((t) => {
+                const typeConfig =
+                  transactionTypes[t.type as TransactionTypeKey];
+                const isExpense = typeConfig?.category === "expense";
 
-                  return (
-                    <TableRow key={t.id}>
-                      <TableCell className="font-medium">{t.date}</TableCell>
-                      <TableCell>
-                        <span
-                          className="inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-xs font-medium text-white"
-                          style={{
-                            backgroundColor: typeConfig?.color ?? "#6b7280",
-                          }}
+                return (
+                  <TableRow key={t.id}>
+                    <TableCell className="font-medium whitespace-nowrap">
+                      {format(new Date(t.date), "MMM d, yyyy")}
+                    </TableCell>
+                    <TableCell className="whitespace-nowrap">
+                      <span
+                        className="inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-xs font-medium text-white"
+                        style={{
+                          backgroundColor: typeConfig?.color ?? "#6b7280",
+                        }}
+                      >
+                        {typeConfig?.label ?? t.type}
+                      </span>
+                    </TableCell>
+                    <TableCell className="text-right font-mono whitespace-nowrap">
+                      <span
+                        className={
+                          isExpense ? "text-red-500" : "text-green-500"
+                        }
+                      >
+                        {isExpense ? "-" : "+"}₱
+                        {Number(t.amount).toLocaleString()}
+                      </span>
+                    </TableCell>
+                    <TableCell className="max-w-48 truncate text-muted-foreground pl-12">
+                      {t.notes || "—"}
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex gap-1">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setEditingTransaction(t)}
+                          className="h-8 w-8 p-0 text-muted-foreground hover:text-foreground"
                         >
-                          {typeConfig?.label ?? t.type}
-                        </span>
-                      </TableCell>
-                      <TableCell className="text-right font-mono">
-                        <span
-                          className={
-                            isExpense ? "text-red-500" : "text-green-500"
-                          }
-                        >
-                          {isExpense ? "-" : "+"}₱
-                          {Number(t.amount).toLocaleString()}
-                        </span>
-                      </TableCell>
-                      <TableCell className="max-w-48 truncate text-muted-foreground">
-                        {t.notes || "—"}
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex gap-1">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => setEditingTransaction(t)}
-                            className="h-8 w-8 p-0 text-muted-foreground hover:text-foreground"
-                          >
-                            <Pencil className="h-4 w-4" />
-                          </Button>
+                          <Pencil className="h-4 w-4" />
+                        </Button>
 
-                          <AlertDialog>
-                            <AlertDialogTrigger asChild>
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                disabled={deletingId === t.id}
-                                className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive"
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              disabled={deletingId === t.id}
+                              className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>
+                                Delete transaction?
+                              </AlertDialogTitle>
+                              <AlertDialogDescription>
+                                This will remove the{" "}
+                                {typeConfig?.label ?? t.type} transaction of ₱
+                                {Number(t.amount).toLocaleString()}.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Cancel</AlertDialogCancel>
+                              <AlertDialogAction
+                                onClick={() => handleDelete(t.id)}
+                                className="bg-destructive text-white hover:bg-destructive/90"
                               >
-                                <Trash2 className="h-4 w-4" />
-                              </Button>
-                            </AlertDialogTrigger>
-                            <AlertDialogContent>
-                              <AlertDialogHeader>
-                                <AlertDialogTitle>
-                                  Delete transaction?
-                                </AlertDialogTitle>
-                                <AlertDialogDescription>
-                                  This will remove the{" "}
-                                  {typeConfig?.label ?? t.type} transaction of ₱
-                                  {Number(t.amount).toLocaleString()}.
-                                </AlertDialogDescription>
-                              </AlertDialogHeader>
-                              <AlertDialogFooter>
-                                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                <AlertDialogAction
-                                  onClick={() => handleDelete(t.id)}
-                                  className="bg-destructive text-white hover:bg-destructive/90"
-                                >
-                                  Delete
-                                </AlertDialogAction>
-                              </AlertDialogFooter>
-                            </AlertDialogContent>
-                          </AlertDialog>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
-          </div>
+                                Delete
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
 
           {/* Infinite scroll trigger */}
           <div ref={loadMoreRef} className="flex justify-center py-4">
