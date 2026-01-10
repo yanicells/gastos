@@ -38,7 +38,19 @@ export default async function DashboardPage() {
               href="/transactions"
               className="text-sm text-muted-foreground hover:text-foreground"
             >
-              All Transactions
+              Transactions
+            </Link>
+            <Link
+              href="/summary"
+              className="text-sm text-muted-foreground hover:text-foreground"
+            >
+              Summary
+            </Link>
+            <Link
+              href="/charts"
+              className="text-sm text-muted-foreground hover:text-foreground"
+            >
+              Charts
             </Link>
             <span className="text-sm text-muted-foreground">
               {authData.claims.email}
