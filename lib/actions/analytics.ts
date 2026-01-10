@@ -6,6 +6,8 @@ import {
   getCategoryBreakdown,
   getTopCategories,
   getComparisonData,
+  getCurrentMonthStats,
+  getRollingAverages,
 } from "@/lib/queries/analytics";
 
 /**
@@ -49,4 +51,18 @@ export async function fetchTopCategories(
  */
 export async function fetchComparisonData(year: number, month: number) {
   return getComparisonData(year, month);
+}
+
+/**
+ * Server action to fetch current month stats.
+ */
+export async function fetchCurrentMonthStats() {
+  return getCurrentMonthStats();
+}
+
+/**
+ * Server action to fetch rolling averages.
+ */
+export async function fetchRollingAverages() {
+  return getRollingAverages();
 }

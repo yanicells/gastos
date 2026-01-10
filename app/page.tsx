@@ -2,9 +2,13 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { getRecentTransactions } from "@/lib/queries/transactions";
+import {
+  getCurrentMonthStats,
+  getRollingAverages,
+} from "@/lib/queries/analytics";
 import { QuickAddForm } from "@/components/dashboard/quick-add-form";
 import { RecentTransactions } from "@/components/dashboard/recent-transactions";
-import { MonthlySummary } from "@/components/dashboard/monthly-summary";
+import { SummaryStats } from "@/components/dashboard/monthly-summary";
 import { LogoutButton } from "@/components/logout-button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -12,7 +16,7 @@ import { Button } from "@/components/ui/button";
 /**
  * Dashboard page - split view layout.
  * Left: Quick Add Form
- * Right: Monthly Summary (placeholder)
+ * Right: Summary Stats
  * Bottom: Recent Transactions
  */
 export default async function DashboardPage() {
@@ -24,8 +28,16 @@ export default async function DashboardPage() {
     redirect("/auth/login");
   }
 
-  // Fetch recent transactions
-  const { data: transactions } = await getRecentTransactions(10);
+  // Fetch data in parallel
+  const [
+    { data: transactions },
+    { data: currentMonthStats },
+    { data: averages },
+  ] = await Promise.all([
+    getRecentTransactions(10),
+    getCurrentMonthStats(),
+    getRollingAverages(),
+  ]);
 
   return (
     <div className="min-h-svh bg-background">
@@ -73,8 +85,8 @@ export default async function DashboardPage() {
             </CardContent>
           </Card>
 
-          {/* Right: Monthly Summary (placeholder) */}
-          <MonthlySummary />
+          {/* Right: Summary Stats */}
+          <SummaryStats currentMonth={currentMonthStats} averages={averages} />
         </div>
 
         {/* Bottom: Recent Transactions */}

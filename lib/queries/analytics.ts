@@ -312,3 +312,148 @@ export async function getComparisonData(
 
   return { ...result, error: null };
 }
+
+/** Stats for a period */
+export interface PeriodStats {
+  income: number;
+  expenses: number;
+  savings: number;
+}
+
+/** Rolling averages */
+export interface RollingAverages {
+  daily: PeriodStats;
+  weekly: PeriodStats;
+  monthly: PeriodStats;
+}
+
+/**
+ * Get current month totals (income, expenses, savings).
+ */
+export async function getCurrentMonthStats(): Promise<{
+  data: PeriodStats;
+  error: Error | null;
+}> {
+  const supabase = await createClient();
+
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth() + 1;
+
+  const startDate = `${year}-${String(month).padStart(2, "0")}-01`;
+  const endDate = new Date(year, month, 0).toISOString().split("T")[0];
+
+  const { data, error } = await supabase
+    .from("transactions")
+    .select("type, amount")
+    .gte("date", startDate)
+    .lte("date", endDate)
+    .is("deleted_at", null);
+
+  if (error) {
+    return {
+      data: { income: 0, expenses: 0, savings: 0 },
+      error: new Error(error.message),
+    };
+  }
+
+  let income = 0;
+  let expenses = 0;
+
+  for (const row of data ?? []) {
+    const typeConfig =
+      transactionTypes[row.type as keyof typeof transactionTypes];
+    const amount = Number(row.amount);
+
+    if (typeConfig?.category === "income") {
+      income += amount;
+    } else {
+      expenses += amount;
+    }
+  }
+
+  return {
+    data: { income, expenses, savings: income - expenses },
+    error: null,
+  };
+}
+
+/**
+ * Get rolling averages based on all data in the current year.
+ * Returns avg per day, avg per week, avg per month.
+ */
+export async function getRollingAverages(): Promise<{
+  data: RollingAverages;
+  error: Error | null;
+}> {
+  const supabase = await createClient();
+
+  const now = new Date();
+  const year = now.getFullYear();
+  const startOfYear = `${year}-01-01`;
+  const today = now.toISOString().split("T")[0];
+
+  const { data, error } = await supabase
+    .from("transactions")
+    .select("type, amount")
+    .gte("date", startOfYear)
+    .lte("date", today)
+    .is("deleted_at", null);
+
+  if (error) {
+    const zero = { income: 0, expenses: 0, savings: 0 };
+    return {
+      data: { daily: zero, weekly: zero, monthly: zero },
+      error: new Error(error.message),
+    };
+  }
+
+  // Calculate totals
+  let totalIncome = 0;
+  let totalExpenses = 0;
+
+  for (const row of data ?? []) {
+    const typeConfig =
+      transactionTypes[row.type as keyof typeof transactionTypes];
+    const amount = Number(row.amount);
+
+    if (typeConfig?.category === "income") {
+      totalIncome += amount;
+    } else {
+      totalExpenses += amount;
+    }
+  }
+
+  const totalSavings = totalIncome - totalExpenses;
+
+  // Calculate elapsed time periods
+  const startDate = new Date(startOfYear);
+  const daysDiff = Math.max(
+    1,
+    Math.floor((now.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)) +
+      1
+  );
+  const weeksDiff = Math.max(1, Math.ceil(daysDiff / 7));
+  const monthsDiff = Math.max(1, now.getMonth() + 1);
+
+  return {
+    data: {
+      daily: {
+        income: totalIncome / daysDiff,
+        expenses: totalExpenses / daysDiff,
+        savings: totalSavings / daysDiff,
+      },
+      weekly: {
+        income: totalIncome / weeksDiff,
+        expenses: totalExpenses / weeksDiff,
+        savings: totalSavings / weeksDiff,
+      },
+      monthly: {
+        income: totalIncome / monthsDiff,
+        expenses: totalExpenses / monthsDiff,
+        savings: totalSavings / monthsDiff,
+      },
+    },
+    error: null,
+  };
+}
