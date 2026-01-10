@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useTransition, useCallback } from "react";
+import { useState, useEffect, useTransition, useCallback, useRef } from "react";
 import Link from "next/link";
 import { ArrowLeft, RefreshCw } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -118,11 +118,17 @@ export function ChartsClient({
     ]
   );
 
+  // Track if this is the first render to avoid double-fetching
+  const isFirstRender = useRef(true);
+
   useEffect(() => {
-    if (year !== initialYear) {
-      loadData(year);
+    // Skip initial load (data already fetched on server)
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
     }
-  }, [year, initialYear, loadData]);
+    loadData(year);
+  }, [year, loadData]);
 
   const handleRefresh = () => {
     loadData(year);
