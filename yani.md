@@ -5,5 +5,3 @@ Main Functions
 
 Future
 - maybe have another table for analytics stuff - so that less queries are needed (see how to implement - if after imports or what)
-
-- separate types 
