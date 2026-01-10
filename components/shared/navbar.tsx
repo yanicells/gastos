@@ -28,10 +28,10 @@ export function Navbar() {
   return (
     <header className="border-b bg-background sticky top-0 z-50">
       <div className="container mx-auto flex h-14 items-center justify-between px-4">
+        <Link href="/" className="font-semibold text-lg">
+          Gastos
+        </Link>
         <nav className="flex items-center gap-6">
-          <Link href="/" className="font-semibold text-lg mr-2">
-            Gastos
-          </Link>
           {navItems.map((item) => (
             <Link
               key={item.href}
