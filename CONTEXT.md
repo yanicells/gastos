@@ -4,7 +4,7 @@ A web app to replace Excel-based expense tracking with a modern, mobile-friendly
 
 ## Project Status
 
-**Current Phase:** Phase 2 (Core Features) - ✅ Complete
+**Current Phase:** Phase 3 (Summary & Analytics) - ✅ Complete
 
 ### Completed
 
@@ -61,7 +61,7 @@ A web app to replace Excel-based expense tracking with a modern, mobile-friendly
 
 - [x] Dashboard page (`app/page.tsx`)
   - Split-view layout: Left (Quick Add), Right (Summary placeholder), Bottom (Recent Transactions)
-  - Navigation to transactions page
+  - Navigation to transactions, summary, and charts pages
 - [x] Transactions page (`app/transactions/page.tsx`)
   - Full transaction list with infinite scroll
   - Reddit-style filters (category pills, type dropdown, date range, search)
@@ -77,21 +77,41 @@ A web app to replace Excel-based expense tracking with a modern, mobile-friendly
 - [x] Delete confirmation dialog
 - [x] Filter-aware infinite scroll
 
+#### Phase 3: Summary & Analytics ✅
+
+**Data Layer:**
+
+- [x] New analytics queries (`lib/queries/analytics.ts`)
+  - `getYearlySummary()` for Excel-style monthly breakdown
+  - `getComparisonData()` for MoM and YoY comparisons
+
+**UI Components:**
+
+- [x] Shared components:
+  - `YearSelector` dropdown (`components/shared/year-selector.tsx`)
+- [x] Summary components:
+  - `MonthlyTable` Excel-style table with color-coded headers
+  - `SummaryClient` client-side wrapper with year selection
+- [x] Chart components (using shadcn charts/Recharts):
+  - `MonthlyBarChart` - income vs expenses by month
+  - `CategoryPieChart` - expense breakdown by type
+  - `TopCategories` - horizontal progress bars for top spending
+  - `TrendLineChart` - monthly trend visualization
+  - `ComparisonCards` - MoM and YoY comparison cards
+
+**Pages:**
+
+- [x] Summary page (`app/summary/page.tsx`)
+  - Excel-style monthly summary table
+  - Year dropdown selector (defaults to current year)
+  - Color-coded columns: Expenses (red), Revenue (blue), Savings (green)
+- [x] Charts page (`app/charts/page.tsx`)
+  - Comparison cards (MoM and YoY for income/expenses)
+  - Monthly bar chart (income vs expenses)
+  - Category pie chart + Top categories side by side
+  - Trend line chart
+
 ### Pending
-
-#### Phase 3: Summary & Analytics
-
-- [ ] Excel-style monthly summary view
-  - Year dropdown selector
-  - Rows: Months (Jan-Dec + Total)
-  - Columns: Expense groups | Revenue groups | Savings
-- [ ] Analytics dashboard
-  - Monthly totals bar chart
-  - Category breakdown pie chart
-  - Expense trends line chart
-  - Top spending categories
-  - Period comparison cards (MoM, YoY)
-- [ ] Chart components using Recharts
 
 #### Phase 4: Polish & Import
 
