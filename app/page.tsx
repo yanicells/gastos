@@ -1,17 +1,17 @@
 import { redirect } from "next/navigation";
-import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { getRecentTransactions } from "@/lib/queries/transactions";
 import {
   getCurrentMonthStats,
   getRollingAverages,
 } from "@/lib/queries/analytics";
+import { Navbar } from "@/components/shared/navbar";
 import { QuickAddForm } from "@/components/dashboard/quick-add-form";
 import { RecentTransactions } from "@/components/dashboard/recent-transactions";
 import { SummaryStats } from "@/components/dashboard/monthly-summary";
-import { LogoutButton } from "@/components/logout-button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 /**
  * Dashboard page - split view layout.
@@ -42,35 +42,7 @@ export default async function DashboardPage() {
   return (
     <div className="min-h-svh bg-background">
       {/* Header */}
-      <header className="border-b">
-        <div className="container mx-auto flex h-14 items-center justify-between px-4">
-          <h1 className="text-lg font-semibold">Gastos</h1>
-          <nav className="flex items-center gap-4">
-            <Link
-              href="/transactions"
-              className="text-sm text-muted-foreground hover:text-foreground"
-            >
-              Transactions
-            </Link>
-            <Link
-              href="/summary"
-              className="text-sm text-muted-foreground hover:text-foreground"
-            >
-              Summary
-            </Link>
-            <Link
-              href="/charts"
-              className="text-sm text-muted-foreground hover:text-foreground"
-            >
-              Charts
-            </Link>
-            <span className="text-sm text-muted-foreground">
-              {authData.claims.email}
-            </span>
-            <LogoutButton />
-          </nav>
-        </div>
-      </header>
+      <Navbar />
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-6">

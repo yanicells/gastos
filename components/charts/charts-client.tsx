@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect, useTransition, useCallback, useRef } from "react";
-import Link from "next/link";
-import { ArrowLeft, RefreshCw } from "lucide-react";
+import { RefreshCw } from "lucide-react";
+import { Navbar } from "@/components/shared/navbar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { YearSelector } from "@/components/shared/year-selector";
@@ -56,9 +56,6 @@ interface ChartsClientProps {
   }>;
 }
 
-/**
- * Client component for Charts page with year selection and data refresh.
- */
 export function ChartsClient({
   initialYear,
   initialMonth,
@@ -137,33 +134,7 @@ export function ChartsClient({
   return (
     <div className="min-h-svh bg-background">
       {/* Header */}
-      <header className="border-b">
-        <div className="container mx-auto flex h-14 items-center justify-between px-4">
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" size="sm" asChild>
-              <Link href="/">
-                <ArrowLeft className="mr-2 h-4 w-4" />
-                Dashboard
-              </Link>
-            </Button>
-            <h1 className="text-lg font-semibold">Charts</h1>
-          </div>
-          <nav className="flex items-center gap-4">
-            <Link
-              href="/transactions"
-              className="text-sm text-muted-foreground hover:text-foreground"
-            >
-              Transactions
-            </Link>
-            <Link
-              href="/summary"
-              className="text-sm text-muted-foreground hover:text-foreground"
-            >
-              Summary
-            </Link>
-          </nav>
-        </div>
-      </header>
+      <Navbar />
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-6 space-y-6">
