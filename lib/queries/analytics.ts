@@ -379,25 +379,31 @@ export async function getCurrentMonthStats(): Promise<{
 }
 
 /**
- * Get rolling averages based on all data in the current year.
- * Returns avg per day, avg per week, avg per month.
+ * Get rolling averages for a specific year (year-to-date if current year).
+ * Returns avg per day, avg per week, avg per month based on that year's data.
+ * @param year - The year to calculate averages for (defaults to current year)
  */
-export async function getRollingAverages(): Promise<{
+export async function getRollingAverages(year?: number): Promise<{
   data: RollingAverages;
   error: Error | null;
 }> {
   const supabase = await createClient();
 
   const now = new Date();
-  const year = now.getFullYear();
-  const startOfYear = `${year}-01-01`;
-  const today = now.toISOString().split("T")[0];
+  const targetYear = year ?? now.getFullYear();
+  const isCurrentYear = targetYear === now.getFullYear();
+
+  const startOfYear = `${targetYear}-01-01`;
+  // For current year, use today; for past years, use Dec 31
+  const endDate = isCurrentYear
+    ? now.toISOString().split("T")[0]
+    : `${targetYear}-12-31`;
 
   const { data, error } = await supabase
     .from("transactions")
     .select("type, amount")
     .gte("date", startOfYear)
-    .lte("date", today)
+    .lte("date", endDate)
     .is("deleted_at", null);
 
   if (error) {
@@ -426,15 +432,31 @@ export async function getRollingAverages(): Promise<{
 
   const totalSavings = totalIncome - totalExpenses;
 
-  // Calculate elapsed time periods
-  const startDate = new Date(startOfYear);
-  const daysDiff = Math.max(
-    1,
-    Math.floor((now.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)) +
-      1
-  );
-  const weeksDiff = Math.max(1, Math.ceil(daysDiff / 7));
-  const monthsDiff = Math.max(1, now.getMonth() + 1);
+  // Calculate elapsed time periods for the year
+  let daysDiff: number;
+  let weeksDiff: number;
+  let monthsDiff: number;
+
+  if (isCurrentYear) {
+    // Current year: calculate from Jan 1 to today
+    const startDate = new Date(startOfYear);
+    daysDiff = Math.max(
+      1,
+      Math.floor(
+        (now.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
+      ) + 1
+    );
+    weeksDiff = Math.max(1, Math.ceil(daysDiff / 7));
+    monthsDiff = Math.max(1, now.getMonth() + 1);
+  } else {
+    // Past year: full year (365/366 days, 52 weeks, 12 months)
+    const isLeapYear =
+      (targetYear % 4 === 0 && targetYear % 100 !== 0) ||
+      targetYear % 400 === 0;
+    daysDiff = isLeapYear ? 366 : 365;
+    weeksDiff = 52;
+    monthsDiff = 12;
+  }
 
   return {
     data: {

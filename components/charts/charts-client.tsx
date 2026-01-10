@@ -50,6 +50,10 @@ interface ChartsClientProps {
     sameMonthLastYear: { income: number; expense: number };
     error: Error | null;
   }>;
+  fetchRollingAverages: (year?: number) => Promise<{
+    data: RollingAverages;
+    error: Error | null;
+  }>;
 }
 
 /**
@@ -67,12 +71,14 @@ export function ChartsClient({
   fetchCategoryBreakdown,
   fetchTopCategories,
   fetchComparisonData,
+  fetchRollingAverages,
 }: ChartsClientProps) {
   const [year, setYear] = useState(initialYear);
   const [monthlyData, setMonthlyData] = useState(initialMonthlyData);
   const [categoryData, setCategoryData] = useState(initialCategoryData);
   const [topCategories, setTopCategories] = useState(initialTopCategories);
   const [comparison, setComparison] = useState(initialComparison);
+  const [averages, setAverages] = useState(initialAverages);
   const [isPending, startTransition] = useTransition();
 
   const loadData = useCallback(
@@ -81,11 +87,12 @@ export function ChartsClient({
         const startDate = `${selectedYear}-01-01`;
         const endDate = `${selectedYear}-12-31`;
 
-        const [monthly, category, top, comp] = await Promise.all([
+        const [monthly, category, top, comp, avg] = await Promise.all([
           fetchMonthlyTrend(selectedYear),
           fetchCategoryBreakdown(startDate, endDate, "expense"),
           fetchTopCategories(5, startDate, endDate),
           fetchComparisonData(selectedYear, initialMonth),
+          fetchRollingAverages(selectedYear),
         ]);
 
         if (!monthly.error) setMonthlyData(monthly.data);
@@ -98,6 +105,7 @@ export function ChartsClient({
             sameMonthLastYear: comp.sameMonthLastYear,
           });
         }
+        if (!avg.error) setAverages(avg.data);
       });
     },
     [
@@ -105,6 +113,7 @@ export function ChartsClient({
       fetchCategoryBreakdown,
       fetchTopCategories,
       fetchComparisonData,
+      fetchRollingAverages,
       initialMonth,
     ]
   );
@@ -184,7 +193,7 @@ export function ChartsClient({
             />
 
             {/* Averages Summary */}
-            <AveragesSummary averages={initialAverages} />
+            <AveragesSummary averages={averages} />
 
             {/* Monthly Bar Chart (Hero) */}
             <Card>

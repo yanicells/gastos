@@ -12,6 +12,7 @@ import {
   fetchCategoryBreakdown,
   fetchTopCategories,
   fetchComparisonData,
+  fetchRollingAverages,
 } from "@/lib/actions/analytics";
 import { ChartsClient } from "@/components/charts/charts-client";
 
@@ -47,7 +48,7 @@ export default async function ChartsPage() {
     getCategoryBreakdown(startDate, endDate, "expense"),
     getTopCategories(5, startDate, endDate),
     getComparisonData(currentYear, currentMonth),
-    getRollingAverages(),
+    getRollingAverages(currentYear),
   ]);
 
   return (
@@ -67,6 +68,7 @@ export default async function ChartsPage() {
       fetchCategoryBreakdown={fetchCategoryBreakdown}
       fetchTopCategories={fetchTopCategories}
       fetchComparisonData={fetchComparisonData}
+      fetchRollingAverages={fetchRollingAverages}
     />
   );
 }

@@ -63,6 +63,6 @@ export async function fetchCurrentMonthStats() {
 /**
  * Server action to fetch rolling averages.
  */
-export async function fetchRollingAverages() {
-  return getRollingAverages();
+export async function fetchRollingAverages(year?: number) {
+  return getRollingAverages(year);
 }
