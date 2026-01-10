@@ -5,6 +5,7 @@ import {
   getCategoryBreakdown,
   getTopCategories,
   getComparisonData,
+  getRollingAverages,
 } from "@/lib/queries/analytics";
 import {
   fetchMonthlyTrend,
@@ -35,13 +36,19 @@ export default async function ChartsPage() {
   const startDate = `${currentYear}-01-01`;
   const endDate = `${currentYear}-12-31`;
 
-  const [monthlyData, categoryData, topCategoriesData, comparisonData] =
-    await Promise.all([
-      getMonthlyTrend(currentYear),
-      getCategoryBreakdown(startDate, endDate, "expense"),
-      getTopCategories(5, startDate, endDate),
-      getComparisonData(currentYear, currentMonth),
-    ]);
+  const [
+    monthlyData,
+    categoryData,
+    topCategoriesData,
+    comparisonData,
+    averagesData,
+  ] = await Promise.all([
+    getMonthlyTrend(currentYear),
+    getCategoryBreakdown(startDate, endDate, "expense"),
+    getTopCategories(5, startDate, endDate),
+    getComparisonData(currentYear, currentMonth),
+    getRollingAverages(),
+  ]);
 
   return (
     <ChartsClient
@@ -55,6 +62,7 @@ export default async function ChartsPage() {
         previousMonth: comparisonData.previousMonth,
         sameMonthLastYear: comparisonData.sameMonthLastYear,
       }}
+      initialAverages={averagesData.data}
       fetchMonthlyTrend={fetchMonthlyTrend}
       fetchCategoryBreakdown={fetchCategoryBreakdown}
       fetchTopCategories={fetchTopCategories}

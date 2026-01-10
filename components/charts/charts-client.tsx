@@ -11,7 +11,9 @@ import { CategoryPieChart } from "@/components/charts/category-pie-chart";
 import { TopCategories } from "@/components/charts/top-categories";
 import { TrendLineChart } from "@/components/charts/trend-line-chart";
 import { ComparisonCards } from "@/components/charts/comparison-cards";
+import { AveragesSummary } from "@/components/charts/averages-summary";
 import type { CategoryBreakdown } from "@/lib/types/transaction";
+import type { RollingAverages } from "@/lib/queries/analytics";
 
 interface ChartsClientProps {
   initialYear: number;
@@ -24,6 +26,7 @@ interface ChartsClientProps {
     previousMonth: { income: number; expense: number };
     sameMonthLastYear: { income: number; expense: number };
   };
+  initialAverages: RollingAverages;
   fetchMonthlyTrend: (year: number) => Promise<{
     data: { month: number; income: number; expense: number }[];
     error: Error | null;
@@ -59,6 +62,7 @@ export function ChartsClient({
   initialCategoryData,
   initialTopCategories,
   initialComparison,
+  initialAverages,
   fetchMonthlyTrend,
   fetchCategoryBreakdown,
   fetchTopCategories,
@@ -178,6 +182,9 @@ export function ChartsClient({
               previousMonth={comparison.previousMonth}
               sameMonthLastYear={comparison.sameMonthLastYear}
             />
+
+            {/* Averages Summary */}
+            <AveragesSummary averages={initialAverages} />
 
             {/* Monthly Bar Chart (Hero) */}
             <Card>
