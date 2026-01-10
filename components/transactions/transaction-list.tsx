@@ -190,14 +190,12 @@ export function TransactionList({
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="w-[120px] whitespace-nowrap">
-                  Date
-                </TableHead>
-                <TableHead className="w-[1%] whitespace-nowrap">Type</TableHead>
-                <TableHead className="w-[1%] whitespace-nowrap text-right">
+                <TableHead className="whitespace-nowrap">Date</TableHead>
+                <TableHead className="whitespace-nowrap pr-8">Type</TableHead>
+                <TableHead className="whitespace-nowrap pr-12">
                   Amount
                 </TableHead>
-                <TableHead className="pl-12">Notes</TableHead>
+                <TableHead className="w-full">Notes</TableHead>
                 <TableHead className="w-20"></TableHead>
               </TableRow>
             </TableHeader>
@@ -212,7 +210,7 @@ export function TransactionList({
                     <TableCell className="font-medium whitespace-nowrap">
                       {format(new Date(t.date), "MMM d, yyyy")}
                     </TableCell>
-                    <TableCell className="whitespace-nowrap">
+                    <TableCell className="whitespace-nowrap pr-8">
                       <span
                         className="inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-xs font-medium text-white"
                         style={{
@@ -222,7 +220,7 @@ export function TransactionList({
                         {typeConfig?.label ?? t.type}
                       </span>
                     </TableCell>
-                    <TableCell className="text-right font-mono whitespace-nowrap">
+                    <TableCell className="text-left font-mono whitespace-nowrap pr-12">
                       <span
                         className={
                           isExpense ? "text-red-500" : "text-green-500"
@@ -232,7 +230,7 @@ export function TransactionList({
                         {Number(t.amount).toLocaleString()}
                       </span>
                     </TableCell>
-                    <TableCell className="max-w-48 truncate text-muted-foreground pl-12">
+                    <TableCell className="max-w-[400px] truncate text-muted-foreground">
                       {t.notes || "—"}
                     </TableCell>
                     <TableCell>
