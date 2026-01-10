@@ -1,14 +1,7 @@
 "use client";
 
-import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Table,
   TableBody,
@@ -25,8 +18,6 @@ interface SummaryStatsProps {
   averages: RollingAverages;
 }
 
-type ViewMode = "this-month" | "averages";
-
 /**
  * Format amount as Philippine Peso.
  */
@@ -40,31 +31,31 @@ function formatCurrency(amount: number): string {
 }
 
 /**
- * Summary stats component with toggle between "This Month" and "Averages".
+ * Summary stats component with tabs for "This Month" and "Averages".
  */
 export function SummaryStats({ currentMonth, averages }: SummaryStatsProps) {
-  const [view, setView] = useState<ViewMode>("this-month");
-
   return (
     <Card className="h-full">
-      <CardHeader className="flex flex-row items-center justify-between pb-2">
-        <CardTitle>Summary</CardTitle>
-        <Select value={view} onValueChange={(val) => setView(val as ViewMode)}>
-          <SelectTrigger className="w-[130px]">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent position="popper" side="bottom" align="end">
-            <SelectItem value="this-month">This Month</SelectItem>
-            <SelectItem value="averages">Averages</SelectItem>
-          </SelectContent>
-        </Select>
+      <CardHeader className="pb-3">
+        <div className="flex items-center justify-between">
+          <CardTitle>Summary</CardTitle>
+          <Tabs defaultValue="this-month" className="w-auto">
+            <TabsList className="grid grid-cols-2">
+              <TabsTrigger value="this-month">This Month</TabsTrigger>
+              <TabsTrigger value="averages">Averages</TabsTrigger>
+            </TabsList>
+          </Tabs>
+        </div>
       </CardHeader>
       <CardContent>
-        {view === "this-month" ? (
-          <ThisMonthView stats={currentMonth} />
-        ) : (
-          <AveragesView averages={averages} />
-        )}
+        <Tabs defaultValue="this-month" className="w-full">
+          <TabsContent value="this-month" className="mt-0">
+            <ThisMonthView stats={currentMonth} />
+          </TabsContent>
+          <TabsContent value="averages" className="mt-0">
+            <AveragesView averages={averages} />
+          </TabsContent>
+        </Tabs>
       </CardContent>
     </Card>
   );
@@ -139,7 +130,7 @@ function AveragesView({ averages }: { averages: RollingAverages }) {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[100px]">Metric</TableHead>
+            <TableHead className="w-25">Metric</TableHead>
             <TableHead className="text-right">Daily</TableHead>
             <TableHead className="text-right">Weekly</TableHead>
             <TableHead className="text-right">Monthly</TableHead>
