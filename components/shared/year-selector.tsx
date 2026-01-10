@@ -37,7 +37,7 @@ export function YearSelector({ value, onChange, years }: YearSelectorProps) {
       <SelectTrigger className="w-[120px]">
         <SelectValue placeholder="Select year" />
       </SelectTrigger>
-      <SelectContent>
+      <SelectContent position="popper" side="bottom" align="center">
         {yearOptions.map((year) => (
           <SelectItem key={year} value={String(year)}>
             {year}

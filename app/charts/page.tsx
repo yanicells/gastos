@@ -6,47 +6,13 @@ import {
   getTopCategories,
   getComparisonData,
 } from "@/lib/queries/analytics";
+import {
+  fetchMonthlyTrend,
+  fetchCategoryBreakdown,
+  fetchTopCategories,
+  fetchComparisonData,
+} from "@/lib/actions/analytics";
 import { ChartsClient } from "@/components/charts/charts-client";
-
-/**
- * Server action to fetch monthly trend data.
- */
-async function fetchMonthlyTrend(year: number) {
-  "use server";
-  return getMonthlyTrend(year);
-}
-
-/**
- * Server action to fetch category breakdown.
- */
-async function fetchCategoryBreakdown(
-  startDate?: string,
-  endDate?: string,
-  category?: "expense" | "income"
-) {
-  "use server";
-  return getCategoryBreakdown(startDate, endDate, category);
-}
-
-/**
- * Server action to fetch top categories.
- */
-async function fetchTopCategories(
-  limit?: number,
-  startDate?: string,
-  endDate?: string
-) {
-  "use server";
-  return getTopCategories(limit, startDate, endDate);
-}
-
-/**
- * Server action to fetch comparison data.
- */
-async function fetchComparisonData(year: number, month: number) {
-  "use server";
-  return getComparisonData(year, month);
-}
 
 /**
  * Charts page - Analytics dashboard with visualizations.

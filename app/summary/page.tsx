@@ -1,15 +1,8 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getYearlySummary } from "@/lib/queries/analytics";
+import { fetchYearlySummary } from "@/lib/actions/analytics";
 import { SummaryClient } from "@/components/summary/summary-client";
-
-/**
- * Server action to fetch yearly summary data.
- */
-async function fetchYearlySummary(year: number) {
-  "use server";
-  return getYearlySummary(year);
-}
 
 /**
  * Summary page - Excel-style monthly overview.

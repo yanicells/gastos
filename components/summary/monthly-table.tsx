@@ -62,7 +62,7 @@ function formatCurrency(amount: number): string {
  */
 export function MonthlyTable({ data, totals }: MonthlyTableProps) {
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto rounded-lg border">
       <Table>
         <TableHeader>
           {/* Group headers row */}

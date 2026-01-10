@@ -6,8 +6,6 @@ Main Functions
 To do
 - implement the analytics
 - select day or week or month for simple breakdown
-- dropdown - it should drop down under the selector - similar to the dropdowns in the home page
-- round the corners in the /summary page
 
 Simple stats (for dashboard)
 - like averages per month day week 
