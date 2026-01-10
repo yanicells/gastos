@@ -1,7 +1,7 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import type { RollingAverages } from "@/lib/queries/analytics";
+import type { RollingAverages } from "@/lib/types/analytics";
 
 interface AveragesSummaryProps {
   averages: RollingAverages;

@@ -1,6 +1,12 @@
 import { createClient } from "@/lib/supabase/server";
 import { transactionTypes } from "@/lib/data/types";
 import type { CategoryBreakdown } from "@/lib/types/transaction";
+import type {
+  MonthlySummaryRow,
+  YearlySummaryTotals,
+  PeriodStats,
+  RollingAverages,
+} from "@/lib/types/analytics";
 
 /**
  * Get breakdown by transaction type for a date range.
@@ -125,25 +131,6 @@ export async function getTopCategories(
   }
 
   return { data: result.data.slice(0, limit), error: null };
-}
-
-/** Monthly summary row type */
-export interface MonthlySummaryRow {
-  month: number;
-  expenses: Record<string, number>;
-  income: Record<string, number>;
-  totalExpenses: number;
-  totalIncome: number;
-  savings: number;
-}
-
-/** Yearly summary totals type */
-export interface YearlySummaryTotals {
-  expenses: Record<string, number>;
-  income: Record<string, number>;
-  totalExpenses: number;
-  totalIncome: number;
-  savings: number;
 }
 
 /**
@@ -311,20 +298,6 @@ export async function getComparisonData(
   }
 
   return { ...result, error: null };
-}
-
-/** Stats for a period */
-export interface PeriodStats {
-  income: number;
-  expenses: number;
-  savings: number;
-}
-
-/** Rolling averages */
-export interface RollingAverages {
-  daily: PeriodStats;
-  weekly: PeriodStats;
-  monthly: PeriodStats;
 }
 
 /**

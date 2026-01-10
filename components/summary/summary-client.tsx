@@ -10,7 +10,7 @@ import { MonthlyTable } from "@/components/summary/monthly-table";
 import type {
   MonthlySummaryRow,
   YearlySummaryTotals,
-} from "@/lib/queries/analytics";
+} from "@/lib/types/analytics";
 
 interface SummaryClientProps {
   initialData: MonthlySummaryRow[];

@@ -12,7 +12,7 @@ import { expenseGroups, incomeGroups } from "@/lib/data/types";
 import type {
   MonthlySummaryRow,
   YearlySummaryTotals,
-} from "@/lib/queries/analytics";
+} from "@/lib/types/analytics";
 
 interface MonthlyTableProps {
   data: MonthlySummaryRow[];

@@ -13,7 +13,7 @@ import { TrendLineChart } from "@/components/charts/trend-line-chart";
 import { ComparisonCards } from "@/components/charts/comparison-cards";
 import { AveragesSummary } from "@/components/charts/averages-summary";
 import type { CategoryBreakdown } from "@/lib/types/transaction";
-import type { RollingAverages } from "@/lib/queries/analytics";
+import type { RollingAverages } from "@/lib/types/analytics";
 
 interface ChartsClientProps {
   initialYear: number;

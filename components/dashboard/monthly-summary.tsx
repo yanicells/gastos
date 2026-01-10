@@ -11,7 +11,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Wallet, TrendingDown, PiggyBank } from "lucide-react";
-import type { PeriodStats, RollingAverages } from "@/lib/queries/analytics";
+import type { PeriodStats, RollingAverages } from "@/lib/types/analytics";
 
 interface SummaryStatsProps {
   currentMonth: PeriodStats;
