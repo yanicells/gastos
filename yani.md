@@ -8,6 +8,7 @@ To do
 - fix types (ensure works with previous logs - and future logs easy to incorporate)
 - fonts (family and size and style)
 - test pwa - try alternatives where pwa + turbopack
+- improve page loading (add skeletons or loading states since it takes way too long)
 
 Future
 - maybe have another table for analytics stuff - so that less queries are needed (see how to implement - if after imports or what)
