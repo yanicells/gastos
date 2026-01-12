@@ -14,7 +14,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
-  transactionTypes,
   expenseTypes,
   incomeTypes,
   type TransactionTypeKey,
@@ -136,14 +135,14 @@ export function TransactionFilters({
             value={filters.startDate}
             onChange={(d) => onChange({ ...filters, startDate: d })}
             placeholder="From"
-            className="w-32"
+            className="w-36"
           />
           <span className="text-muted-foreground">–</span>
           <DatePicker
             value={filters.endDate}
             onChange={(d) => onChange({ ...filters, endDate: d })}
             placeholder="To"
-            className="w-32"
+            className="w-36"
           />
         </div>
 
