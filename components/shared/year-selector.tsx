@@ -1,12 +1,15 @@
 "use client";
 
+import * as React from "react";
+import { ChevronsUpDown } from "lucide-react";
+
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 interface YearSelectorProps {
   value: number;
@@ -18,9 +21,13 @@ interface YearSelectorProps {
 /**
  * Year dropdown selector component.
  * Used in summary and charts pages.
+ * Displays years in a grid for better usability with many years.
  */
 export function YearSelector({ value, onChange, years }: YearSelectorProps) {
+  const [open, setOpen] = React.useState(false);
   const currentYear = new Date().getFullYear();
+
+  // Default to last 5 years if not provided, but sorted descending
   const yearOptions = years ?? [
     currentYear,
     currentYear - 1,
@@ -30,20 +37,43 @@ export function YearSelector({ value, onChange, years }: YearSelectorProps) {
   ];
 
   return (
-    <Select
-      value={String(value)}
-      onValueChange={(val) => onChange(Number(val))}
-    >
-      <SelectTrigger className="w-[120px]">
-        <SelectValue placeholder="Select year" />
-      </SelectTrigger>
-      <SelectContent position="popper" side="bottom" align="center">
-        {yearOptions.map((year) => (
-          <SelectItem key={year} value={String(year)}>
-            {year}
-          </SelectItem>
-        ))}
-      </SelectContent>
-    </Select>
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button
+          variant="outline"
+          role="combobox"
+          aria-expanded={open}
+          className="w-[120px] justify-between"
+        >
+          {value}
+          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-[240px] p-3" align="end">
+        <div className="text-sm font-medium text-muted-foreground px-1">
+          Select Year
+        </div>
+        <div className="grid grid-cols-3 gap-2 max-h-[300px] overflow-y-auto pr-1">
+          {yearOptions.map((year) => (
+            <Button
+              key={year}
+              variant={value === year ? "default" : "outline"}
+              className={cn(
+                "h-9 px-2 text-sm font-normal",
+                value === year
+                  ? "hover:bg-primary/90"
+                  : "hover:bg-accent hover:text-accent-foreground"
+              )}
+              onClick={() => {
+                onChange(year);
+                setOpen(false);
+              }}
+            >
+              {year}
+            </Button>
+          ))}
+        </div>
+      </PopoverContent>
+    </Popover>
   );
 }

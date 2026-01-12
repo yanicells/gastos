@@ -7,6 +7,7 @@ import {
   getComparisonData,
   getRollingAverages,
 } from "@/lib/queries/analytics";
+import { getAvailableYears } from "@/lib/queries/transactions";
 import {
   fetchMonthlyTrend,
   fetchCategoryBreakdown,
@@ -43,18 +44,21 @@ export default async function ChartsPage() {
     topCategoriesData,
     comparisonData,
     averagesData,
+    availableYears,
   ] = await Promise.all([
     getMonthlyTrend(currentYear),
     getCategoryBreakdown(startDate, endDate, "expense"),
     getTopCategories(5, startDate, endDate),
     getComparisonData(currentYear, currentMonth),
     getRollingAverages(currentYear),
+    getAvailableYears(),
   ]);
 
   return (
     <ChartsClient
       initialYear={currentYear}
       initialMonth={currentMonth}
+      availableYears={availableYears}
       initialMonthlyData={monthlyData.data}
       initialCategoryData={categoryData.data}
       initialTopCategories={topCategoriesData.data}

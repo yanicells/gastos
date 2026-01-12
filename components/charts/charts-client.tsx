@@ -18,6 +18,7 @@ import type { RollingAverages } from "@/lib/types/analytics";
 interface ChartsClientProps {
   initialYear: number;
   initialMonth: number;
+  availableYears: number[];
   initialMonthlyData: { month: number; income: number; expense: number }[];
   initialCategoryData: CategoryBreakdown[];
   initialTopCategories: CategoryBreakdown[];
@@ -59,6 +60,7 @@ interface ChartsClientProps {
 export function ChartsClient({
   initialYear,
   initialMonth,
+  availableYears,
   initialMonthlyData,
   initialCategoryData,
   initialTopCategories,
@@ -142,7 +144,11 @@ export function ChartsClient({
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-semibold">Analytics Overview</h2>
           <div className="flex items-center gap-2">
-            <YearSelector value={year} onChange={setYear} />
+            <YearSelector
+              value={year}
+              onChange={setYear}
+              years={availableYears}
+            />
             <Button
               variant="outline"
               size="icon"

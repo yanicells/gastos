@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getYearlySummary } from "@/lib/queries/analytics";
+import { getAvailableYears } from "@/lib/queries/transactions";
 import { fetchYearlySummary } from "@/lib/actions/analytics";
 import { SummaryClient } from "@/components/summary/summary-client";
 
@@ -18,13 +19,17 @@ export default async function SummaryPage() {
 
   // Get current year and fetch initial data
   const currentYear = new Date().getFullYear();
-  const { data, totals } = await getYearlySummary(currentYear);
+  const [{ data, totals }, availableYears] = await Promise.all([
+    getYearlySummary(currentYear),
+    getAvailableYears(),
+  ]);
 
   return (
     <SummaryClient
       initialData={data}
       initialTotals={totals}
       initialYear={currentYear}
+      availableYears={availableYears}
       fetchYearlySummary={fetchYearlySummary}
     />
   );

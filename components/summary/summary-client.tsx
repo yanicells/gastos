@@ -16,6 +16,7 @@ interface SummaryClientProps {
   initialData: MonthlySummaryRow[];
   initialTotals: YearlySummaryTotals;
   initialYear: number;
+  availableYears: number[];
   fetchYearlySummary: (year: number) => Promise<{
     data: MonthlySummaryRow[];
     totals: YearlySummaryTotals;
@@ -27,6 +28,7 @@ export function SummaryClient({
   initialData,
   initialTotals,
   initialYear,
+  availableYears,
   fetchYearlySummary,
 }: SummaryClientProps) {
   const [year, setYear] = useState(initialYear);
@@ -72,7 +74,11 @@ export function SummaryClient({
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle>Yearly Summary</CardTitle>
             <div className="flex items-center gap-2">
-              <YearSelector value={year} onChange={setYear} />
+              <YearSelector
+                value={year}
+                onChange={setYear}
+                years={availableYears}
+              />
               <Button
                 variant="outline"
                 size="icon"

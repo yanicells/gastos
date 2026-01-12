@@ -173,3 +173,31 @@ export async function getRecentTransactions(
     error: error ? new Error(error.message) : null,
   };
 }
+
+/**
+ * Get distinct years from transactions.
+ */
+export async function getAvailableYears(): Promise<number[]> {
+  const supabase = await createClient();
+
+  const { data } = await supabase
+    .from("transactions")
+    .select("date")
+    .is("deleted_at", null);
+
+  const years = new Set<number>();
+
+  // Always include current year and next year (for planning)
+  const currentYear = new Date().getFullYear();
+  years.add(currentYear);
+  years.add(currentYear + 1);
+
+  if (data) {
+    data.forEach((row) => {
+      const year = new Date(row.date).getFullYear();
+      years.add(year);
+    });
+  }
+
+  return Array.from(years).sort((a, b) => b - a);
+}
