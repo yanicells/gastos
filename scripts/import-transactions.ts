@@ -52,7 +52,6 @@ if (!DRY_RUN) {
 
 /**
  * Maps the source labels from Excel/markdown to TransactionTypeKey.
- * "Other" entries are handled separately based on context (see mapOtherType).
  */
 const TYPE_MAP: Record<string, string> = {
   // Expenses
@@ -60,51 +59,12 @@ const TYPE_MAP: Record<string, string> = {
   "Groceries and Food Expense": "groceries",
   "Personal Expense": "personal",
   "General Expense": "general",
+  "Other Expense": "other_expense",
   // Income
   Allowance: "allowance",
   Scholarships: "scholarship",
+  Other: "other_income", // "Other" without "Expense" is income
 };
-
-/**
- * Keywords in notes that indicate "Other" is income (gifts, etc.)
- */
-const INCOME_KEYWORDS = [
-  "gift",
-  "tita",
-  "tito",
-  "auntie",
-  "aunti",
-  "uncle",
-  "xmas",
-  "christmas",
-  "birthday",
-  "phil am",
-  "philam",
-];
-
-/**
- * Determines if an "Other" entry is income or expense based on notes/amount.
- * - Large amounts with gift-like keywords → income
- * - Otherwise → expense
- */
-function mapOtherType(notes: string, amount: number): string {
-  const lowerNotes = notes.toLowerCase();
-
-  // Check for income keywords
-  for (const keyword of INCOME_KEYWORDS) {
-    if (lowerNotes.includes(keyword)) {
-      return "other_income";
-    }
-  }
-
-  // Large round amounts without keywords are likely income gifts
-  // (This is a heuristic - adjust as needed)
-  if (amount >= 5000 && amount % 1000 === 0 && !notes) {
-    return "other_income";
-  }
-
-  return "other_expense";
-}
 
 // ============================================================================
 // Parsing
@@ -164,12 +124,9 @@ function parseLine(
 
   // Parse type
   const typeLabel = rawType.trim();
-  let type: string;
 
-  if (typeLabel === "Other" || typeLabel === "") {
-    // Handle "Other" with context-based mapping
-    type = mapOtherType(rawNotes.trim(), amount);
-  } else if (TYPE_MAP[typeLabel]) {
+  let type: string;
+  if (TYPE_MAP[typeLabel]) {
     type = TYPE_MAP[typeLabel];
   } else {
     console.warn(`⚠️  Unknown type at line ${lineNumber}: "${typeLabel}"`);
