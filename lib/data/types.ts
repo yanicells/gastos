@@ -14,27 +14,14 @@ export const transactionTypes = {
     icon: "GraduationCap",
     color: "#ef4444",
   },
-  tuition: {
-    label: "Tuition",
-    category: "expense",
-    group: "school",
-    icon: "School",
-    color: "#ef4444",
-  },
   groceries: {
-    label: "Groceries",
+    label: "Groceries & Food",
     category: "expense",
     group: "groceries",
     icon: "ShoppingCart",
     color: "#f97316",
   },
-  food: {
-    label: "Food",
-    category: "expense",
-    group: "groceries",
-    icon: "Utensils",
-    color: "#f97316",
-  },
+
   personal: {
     label: "Personal",
     category: "expense",
