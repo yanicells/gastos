@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build --webpack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "import": "npx tsx --env-file=.env scripts/import-transactions.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.0.0",

@@ -17,7 +17,7 @@ export const transactionTypes = {
   groceries: {
     label: "Groceries & Food",
     category: "expense",
-    group: "groceries",
+    group: "groceries and food",
     icon: "ShoppingCart",
     color: "#f97316",
   },
