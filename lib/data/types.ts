@@ -79,7 +79,7 @@ export type TransactionCategory = "expense" | "income";
 /** Expense groups for summary view */
 export const expenseGroups = [
   "school",
-  "groceries",
+  "groceries and food",
   "personal",
   "general",
   "other",

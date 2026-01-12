@@ -38,6 +38,7 @@ const MONTH_NAMES = [
 const GROUP_LABELS: Record<string, string> = {
   school: "School",
   groceries: "Groceries",
+  "groceries and food": "Groceries & Food",
   personal: "Personal",
   general: "General",
   other: "Other",

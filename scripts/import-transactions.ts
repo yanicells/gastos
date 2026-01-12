@@ -199,7 +199,8 @@ async function importTransactions(transactions: ParsedTransaction[]) {
       notes: t.notes,
     }));
 
-    const { error } = await supabase.from("transactions").insert(rows);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { error } = await supabase.from("transactions").insert(rows as any);
 
     if (error) {
       console.error(`❌ Batch insert error: ${error.message}`);
