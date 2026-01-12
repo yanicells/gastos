@@ -8,7 +8,11 @@
 
 import * as fs from "fs";
 import * as path from "path";
+import * as dotenv from "dotenv";
 import { createClient } from "@supabase/supabase-js";
+
+// Load .env from project root
+dotenv.config({ path: path.join(process.cwd(), ".env") });
 
 // ============================================================================
 // Configuration
@@ -17,19 +21,30 @@ import { createClient } from "@supabase/supabase-js";
 const SHEETS_DIR = path.join(process.cwd(), "sheets");
 const DRY_RUN = process.argv.includes("--dry-run");
 
-// Supabase client with service role for direct DB access
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+// Supabase client - use service role for inserts
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-if (!supabaseUrl || !supabaseServiceKey) {
-  console.error(
-    "❌ Missing NEXT_PUBLIC_SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY"
-  );
-  console.error("   Make sure .env file has these values");
+if (!supabaseUrl) {
+  console.error("❌ Missing NEXT_PUBLIC_SUPABASE_URL in .env");
   process.exit(1);
 }
 
-const supabase = createClient(supabaseUrl, supabaseServiceKey);
+// For actual import, we need the service role key
+// For dry-run, we don't need any key since we're just parsing files
+let supabase: ReturnType<typeof createClient> | null = null;
+
+if (!DRY_RUN) {
+  if (!supabaseServiceKey) {
+    console.error("❌ Missing SUPABASE_SERVICE_ROLE_KEY in .env");
+    console.error("   This is required for inserting data.");
+    console.error(
+      "   Get it from: Supabase Dashboard → Settings → API → service_role key"
+    );
+    process.exit(1);
+  }
+  supabase = createClient(supabaseUrl, supabaseServiceKey);
+}
 
 // ============================================================================
 // Type Mapping
@@ -205,6 +220,11 @@ function parseAllFiles(): ParsedTransaction[] {
 // ============================================================================
 
 async function importTransactions(transactions: ParsedTransaction[]) {
+  if (!supabase) {
+    console.error("❌ Supabase client not initialized");
+    return;
+  }
+
   console.log(`\n📥 Importing ${transactions.length} transactions...`);
 
   // Batch insert in chunks of 100
