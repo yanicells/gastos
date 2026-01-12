@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useTransition, useCallback } from "react";
+import { useState, useEffect, useTransition, useCallback, useRef } from "react";
 import { RefreshCw } from "lucide-react";
 import { Navbar } from "@/components/shared/navbar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -47,11 +47,15 @@ export function SummaryClient({
     [fetchYearlySummary]
   );
 
+  const isFirstRender = useRef(true);
+
   useEffect(() => {
-    if (year !== initialYear) {
-      loadData(year);
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
     }
-  }, [year, initialYear, loadData]);
+    loadData(year);
+  }, [year, loadData]);
 
   const handleRefresh = () => {
     loadData(year);
