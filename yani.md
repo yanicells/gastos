@@ -4,8 +4,6 @@ Main Functions
 - charts and graph with filters (types, period (month, week, year))
 
 To do
-- imports
-- fix types (ensure works with previous logs - and future logs easy to incorporate)
 - fonts (family and size and style)
 - test pwa - try alternatives where pwa + turbopack
 - improve page loading (add skeletons or loading states since it takes way too long)
