@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -53,13 +53,6 @@ export function TransactionsPageSkeleton() {
           <Skeleton className="h-6 w-32" />
         </CardHeader>
         <CardContent className="space-y-6">
-          {/* Filters row */}
-          <div className="flex flex-wrap gap-3">
-            <Skeleton className="h-10 w-32" />
-            <Skeleton className="h-10 w-32" />
-            <Skeleton className="h-10 w-40" />
-            <Skeleton className="h-10 flex-1 min-w-48" />
-          </div>
           <TransactionTableSkeleton rows={12} />
         </CardContent>
       </Card>
