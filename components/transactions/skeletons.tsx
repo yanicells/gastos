@@ -1,6 +1,6 @@
 "use client";
 
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
 /**
@@ -50,7 +50,7 @@ export function TransactionsPageSkeleton() {
     <div className="container mx-auto px-4 py-6">
       <Card>
         <CardHeader>
-          <Skeleton className="h-6 w-32" />
+          <CardTitle>Transactions</CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
           <TransactionTableSkeleton rows={12} />
