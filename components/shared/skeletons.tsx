@@ -1,13 +1,5 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 
 /**
  * Dashboard page skeleton - matches layout of dashboard.
@@ -86,48 +78,25 @@ export function DashboardSkeleton() {
 }
 
 /**
- * Transaction table skeleton - shows actual table structure with placeholder text.
- * Columns: Date | Type | Amount | Notes | Actions
+ * Transaction table skeleton - simple full-width rows.
  */
-export function TransactionTableSkeleton({ rows = 10 }: { rows?: number }) {
+export function TransactionTableSkeleton({ rows = 5 }: { rows?: number }) {
   return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead className="whitespace-nowrap">Date</TableHead>
-          <TableHead className="whitespace-nowrap pr-8">Type</TableHead>
-          <TableHead className="whitespace-nowrap pr-12">Amount</TableHead>
-          <TableHead className="w-full">Notes</TableHead>
-          <TableHead className="w-20" />
-        </TableRow>
-      </TableHeader>
-      <TableBody>
+    <div className="space-y-4">
+      {/* Header-like skeleton */}
+      <div className="flex gap-4 px-4">
+        <Skeleton className="h-4 w-24" />
+        <Skeleton className="h-4 w-20" />
+        <Skeleton className="h-4 flex-1" />
+      </div>
+
+      {/* Rows */}
+      <div className="space-y-2">
         {Array.from({ length: rows }).map((_, i) => (
-          <TableRow key={i}>
-            <TableCell className="font-medium whitespace-nowrap text-muted-foreground">
-              —
-            </TableCell>
-            <TableCell className="whitespace-nowrap pr-8">
-              <span className="inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-xs font-medium bg-muted text-muted-foreground">
-                —
-              </span>
-            </TableCell>
-            <TableCell className="text-left font-mono whitespace-nowrap pr-12 text-muted-foreground">
-              —
-            </TableCell>
-            <TableCell className="max-w-[400px] text-muted-foreground">
-              —
-            </TableCell>
-            <TableCell>
-              <div className="flex gap-1">
-                <div className="h-8 w-8" />
-                <div className="h-8 w-8" />
-              </div>
-            </TableCell>
-          </TableRow>
+          <Skeleton key={i} className="h-16 w-full rounded-lg" />
         ))}
-      </TableBody>
-    </Table>
+      </div>
+    </div>
   );
 }
 
@@ -157,171 +126,37 @@ export function TransactionsPageSkeleton() {
 }
 
 /**
- * Summary table skeleton - shows actual table structure with placeholder text.
+ * Summary table skeleton - simple full-width rows to indicate data loading.
  */
 export function SummaryTableSkeleton() {
-  const MONTH_NAMES = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
-
-  const expenseGroups = [
-    "School",
-    "Groceries & Food",
-    "Personal",
-    "General",
-    "Other",
-  ];
-  const incomeGroups = ["Allowance", "Scholarships", "Other"];
-
   return (
     <div className="container mx-auto px-4 py-6">
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
-          <Skeleton className="h-6 w-32" />
-          <div className="flex gap-2">
-            <Skeleton className="h-10 w-20" />
-            <Skeleton className="h-10 w-10" />
+          <Skeleton className="h-8 w-48" />
+          <div className="flex items-center gap-2">
+            <Skeleton className="h-9 w-30" />
+            <Skeleton className="h-9 w-9" />
           </div>
         </CardHeader>
         <CardContent>
-          <div className="overflow-x-auto rounded-lg border">
-            <Table>
-              <TableHeader>
-                {/* Group headers row */}
-                <TableRow>
-                  <TableHead className="sticky left-0 z-10 bg-background" />
-                  <TableHead
-                    colSpan={expenseGroups.length + 1}
-                    className="bg-red-500/10 text-center text-red-400 font-semibold border-x"
-                  >
-                    Expenses
-                  </TableHead>
-                  <TableHead
-                    colSpan={incomeGroups.length + 1}
-                    className="bg-blue-500/10 text-center text-blue-400 font-semibold border-x"
-                  >
-                    Revenue
-                  </TableHead>
-                  <TableHead className="bg-green-500/10 text-center text-green-400 font-semibold">
-                    Savings
-                  </TableHead>
-                </TableRow>
-                {/* Column headers row */}
-                <TableRow>
-                  <TableHead className="sticky left-0 z-10 bg-background font-semibold min-w-24">
-                    Month
-                  </TableHead>
-                  {expenseGroups.map((group) => (
-                    <TableHead
-                      key={group}
-                      className="bg-red-500/5 text-red-400/80 text-center min-w-24"
-                    >
-                      {group}
-                    </TableHead>
-                  ))}
-                  <TableHead className="bg-red-500/10 text-red-400 font-semibold text-center min-w-28">
-                    TOTAL
-                  </TableHead>
-                  {incomeGroups.map((group) => (
-                    <TableHead
-                      key={group}
-                      className="bg-blue-500/5 text-blue-400/80 text-center min-w-24"
-                    >
-                      {group}
-                    </TableHead>
-                  ))}
-                  <TableHead className="bg-blue-500/10 text-blue-400 font-semibold text-center min-w-28">
-                    TOTAL
-                  </TableHead>
-                  <TableHead className="bg-green-500/10 text-green-400 font-semibold text-center min-w-28">
-                    Amount
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {/* Monthly rows with placeholder */}
-                {MONTH_NAMES.map((month) => (
-                  <TableRow key={month}>
-                    <TableCell className="sticky left-0 z-10 bg-background font-medium">
-                      {month}
-                    </TableCell>
-                    {/* Expense values */}
-                    {expenseGroups.map((group) => (
-                      <TableCell
-                        key={group}
-                        className="text-center tabular-nums text-muted-foreground"
-                      >
-                        —
-                      </TableCell>
-                    ))}
-                    <TableCell className="text-center font-semibold text-muted-foreground tabular-nums">
-                      —
-                    </TableCell>
-                    {/* Income values */}
-                    {incomeGroups.map((group) => (
-                      <TableCell
-                        key={group}
-                        className="text-center tabular-nums text-muted-foreground"
-                      >
-                        —
-                      </TableCell>
-                    ))}
-                    <TableCell className="text-center font-semibold text-muted-foreground tabular-nums">
-                      —
-                    </TableCell>
-                    {/* Savings */}
-                    <TableCell className="text-center font-semibold text-muted-foreground tabular-nums">
-                      —
-                    </TableCell>
-                  </TableRow>
-                ))}
-                {/* Totals row */}
-                <TableRow className="border-t-2 font-bold">
-                  <TableCell className="sticky left-0 z-10 bg-background">
-                    TOTAL
-                  </TableCell>
-                  {/* Expense totals */}
-                  {expenseGroups.map((group) => (
-                    <TableCell
-                      key={group}
-                      className="text-center text-muted-foreground tabular-nums"
-                    >
-                      —
-                    </TableCell>
-                  ))}
-                  <TableCell className="text-center text-muted-foreground tabular-nums">
-                    —
-                  </TableCell>
-                  {/* Income totals */}
-                  {incomeGroups.map((group) => (
-                    <TableCell
-                      key={group}
-                      className="text-center text-muted-foreground tabular-nums"
-                    >
-                      —
-                    </TableCell>
-                  ))}
-                  <TableCell className="text-center text-muted-foreground tabular-nums">
-                    —
-                  </TableCell>
-                  {/* Savings total */}
-                  <TableCell className="text-center text-muted-foreground tabular-nums">
-                    —
-                  </TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
+          <div className="space-y-4">
+            {/* Header-like skeleton */}
+            <div className="flex gap-4 px-2">
+              <Skeleton className="h-4 w-24" />
+              <Skeleton className="h-4 flex-1" />
+              <Skeleton className="h-4 w-24" />
+            </div>
+
+            {/* Rows */}
+            <div className="space-y-2">
+              {Array.from({ length: 12 }).map((_, i) => (
+                <Skeleton key={i} className="h-12 w-full rounded-md" />
+              ))}
+            </div>
+
+            {/* Total Row */}
+            <Skeleton className="h-12 w-full rounded-md opacity-50" />
           </div>
         </CardContent>
       </Card>

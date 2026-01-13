@@ -6,8 +6,7 @@ import { getAvailableYears } from "@/lib/queries/transactions";
 import { fetchYearlySummary } from "@/lib/actions/analytics";
 import { SummaryClient } from "@/components/summary/summary-client";
 import { Navbar } from "@/components/shared/navbar";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
+import { SummaryTableSkeleton } from "@/components/shared/skeletons";
 
 /**
  * Skeleton for summary table content.
@@ -16,39 +15,7 @@ function SummaryContentSkeleton() {
   return (
     <div className="min-h-svh bg-background">
       <Navbar />
-      <div className="container mx-auto px-4 py-6">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between">
-            <Skeleton className="h-6 w-32" />
-            <div className="flex gap-2">
-              <Skeleton className="h-10 w-24" />
-              <Skeleton className="h-10 w-10" />
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-2 overflow-x-auto">
-              {/* Header row */}
-              <div className="flex gap-2">
-                <Skeleton className="h-8 w-24 shrink-0" />
-                {Array.from({ length: 12 }).map((_, i) => (
-                  <Skeleton key={i} className="h-8 w-16 shrink-0" />
-                ))}
-                <Skeleton className="h-8 w-20 shrink-0" />
-              </div>
-              {/* Data rows */}
-              {Array.from({ length: 8 }).map((_, i) => (
-                <div key={i} className="flex gap-2">
-                  <Skeleton className="h-6 w-24 shrink-0" />
-                  {Array.from({ length: 12 }).map((_, j) => (
-                    <Skeleton key={j} className="h-6 w-16 shrink-0" />
-                  ))}
-                  <Skeleton className="h-6 w-20 shrink-0" />
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+      <SummaryTableSkeleton />
     </div>
   );
 }
