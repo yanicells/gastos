@@ -162,7 +162,11 @@ export function ChartsClient({
           </div>
         </div>
 
-        <div className={isPending ? "opacity-50 pointer-events-none" : ""}>
+        <div
+          className={`space-y-6 ${
+            isPending ? "opacity-50 pointer-events-none" : ""
+          }`}
+        >
           {/* Comparison Cards */}
           <ComparisonCards
             currentMonth={comparison.currentMonth}
@@ -174,7 +178,7 @@ export function ChartsClient({
           <AveragesSummary averages={averages} />
 
           {/* Monthly Bar Chart (Hero) */}
-          <Card className="mt-6">
+          <Card>
             <CardHeader>
               <CardTitle>Monthly Income vs Expenses</CardTitle>
             </CardHeader>
@@ -184,7 +188,7 @@ export function ChartsClient({
           </Card>
 
           {/* Pie Chart + Top Categories Row */}
-          <div className="grid gap-6 lg:grid-cols-2 mt-6">
+          <div className="grid gap-6 lg:grid-cols-2">
             <Card>
               <CardHeader>
                 <CardTitle>Expense Breakdown</CardTitle>
@@ -205,7 +209,7 @@ export function ChartsClient({
           </div>
 
           {/* Trend Line Chart */}
-          <Card className="mt-6">
+          <Card>
             <CardHeader>
               <CardTitle>Monthly Trend</CardTitle>
             </CardHeader>
