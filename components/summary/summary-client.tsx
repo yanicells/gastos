@@ -92,13 +92,9 @@ export function SummaryClient({
             </div>
           </CardHeader>
           <CardContent>
-            {isPending ? (
-              <div className="flex items-center justify-center py-12">
-                <RefreshCw className="h-6 w-6 animate-spin text-muted-foreground" />
-              </div>
-            ) : (
+            <div className={isPending ? "opacity-50 pointer-events-none" : ""}>
               <MonthlyTable data={data} totals={totals} />
-            )}
+            </div>
           </CardContent>
         </Card>
       </main>

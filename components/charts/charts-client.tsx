@@ -162,64 +162,58 @@ export function ChartsClient({
           </div>
         </div>
 
-        {isPending ? (
-          <div className="flex items-center justify-center py-24">
-            <RefreshCw className="h-8 w-8 animate-spin text-muted-foreground" />
+        <div className={isPending ? "opacity-50 pointer-events-none" : ""}>
+          {/* Comparison Cards */}
+          <ComparisonCards
+            currentMonth={comparison.currentMonth}
+            previousMonth={comparison.previousMonth}
+            sameMonthLastYear={comparison.sameMonthLastYear}
+          />
+
+          {/* Averages Summary */}
+          <AveragesSummary averages={averages} />
+
+          {/* Monthly Bar Chart (Hero) */}
+          <Card className="mt-6">
+            <CardHeader>
+              <CardTitle>Monthly Income vs Expenses</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <MonthlyBarChart data={monthlyData} />
+            </CardContent>
+          </Card>
+
+          {/* Pie Chart + Top Categories Row */}
+          <div className="grid gap-6 lg:grid-cols-2 mt-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Expense Breakdown</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CategoryPieChart data={categoryData} />
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Top Spending Categories</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <TopCategories data={topCategories} />
+              </CardContent>
+            </Card>
           </div>
-        ) : (
-          <>
-            {/* Comparison Cards */}
-            <ComparisonCards
-              currentMonth={comparison.currentMonth}
-              previousMonth={comparison.previousMonth}
-              sameMonthLastYear={comparison.sameMonthLastYear}
-            />
 
-            {/* Averages Summary */}
-            <AveragesSummary averages={averages} />
-
-            {/* Monthly Bar Chart (Hero) */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Monthly Income vs Expenses</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <MonthlyBarChart data={monthlyData} />
-              </CardContent>
-            </Card>
-
-            {/* Pie Chart + Top Categories Row */}
-            <div className="grid gap-6 lg:grid-cols-2">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Expense Breakdown</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CategoryPieChart data={categoryData} />
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Top Spending Categories</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <TopCategories data={topCategories} />
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Trend Line Chart */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Monthly Trend</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <TrendLineChart data={monthlyData} />
-              </CardContent>
-            </Card>
-          </>
-        )}
+          {/* Trend Line Chart */}
+          <Card className="mt-6">
+            <CardHeader>
+              <CardTitle>Monthly Trend</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <TrendLineChart data={monthlyData} />
+            </CardContent>
+          </Card>
+        </div>
       </main>
     </div>
   );
