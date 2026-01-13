@@ -162,11 +162,7 @@ export function ChartsClient({
           </div>
         </div>
 
-        <div
-          className={`space-y-6 ${
-            isPending ? "opacity-50 pointer-events-none" : ""
-          }`}
-        >
+        <div className="space-y-6">
           {/* Comparison Cards */}
           <ComparisonCards
             currentMonth={comparison.currentMonth}

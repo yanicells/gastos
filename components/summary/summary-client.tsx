@@ -92,9 +92,7 @@ export function SummaryClient({
             </div>
           </CardHeader>
           <CardContent>
-            <div className={isPending ? "opacity-50 pointer-events-none" : ""}>
-              <MonthlyTable data={data} totals={totals} />
-            </div>
+            <MonthlyTable data={data} totals={totals} />
           </CardContent>
         </Card>
       </main>
