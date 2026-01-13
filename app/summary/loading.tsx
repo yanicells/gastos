@@ -1,5 +1,5 @@
 import { Navbar } from "@/components/shared/navbar";
-import { SummaryTableSkeleton } from "@/components/shared/skeletons";
+import { SummaryTableSkeleton } from "@/components/summary/skeletons";
 
 /**
  * Loading state for summary route.

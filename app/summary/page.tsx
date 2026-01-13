@@ -6,7 +6,7 @@ import { getAvailableYears } from "@/lib/queries/transactions";
 import { fetchYearlySummary } from "@/lib/actions/analytics";
 import { SummaryClient } from "@/components/summary/summary-client";
 import { Navbar } from "@/components/shared/navbar";
-import { SummaryTableSkeleton } from "@/components/shared/skeletons";
+import { SummaryTableSkeleton } from "@/components/summary/skeletons";
 
 /**
  * Skeleton for summary table content.

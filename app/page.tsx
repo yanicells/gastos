@@ -12,73 +12,11 @@ import { RecentTransactions } from "@/components/dashboard/recent-transactions";
 import { SummaryStats } from "@/components/dashboard/monthly-summary";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
+import {
+  SummaryStatsSkeleton,
+  RecentTransactionsSkeleton,
+} from "@/components/dashboard/skeletons";
 import Link from "next/link";
-
-/**
- * Skeleton for SummaryStats - matches the card layout.
- */
-function SummaryStatsSkeleton() {
-  return (
-    <Card className="h-full">
-      <CardContent className="space-y-6 pt-6">
-        {/* Stats cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {[1, 2, 3].map((i) => (
-            <div
-              key={i}
-              className="flex flex-col gap-2 p-4 rounded-xl border bg-card/50"
-            >
-              <div className="flex items-center gap-2">
-                <Skeleton className="h-7 w-7 rounded-md" />
-                <Skeleton className="h-4 w-16" />
-              </div>
-              <Skeleton className="h-8 w-28" />
-            </div>
-          ))}
-        </div>
-        {/* Averages table */}
-        <div className="rounded-lg border overflow-hidden">
-          <div className="p-4 space-y-3">
-            <div className="flex gap-4">
-              <Skeleton className="h-4 w-16" />
-              <Skeleton className="h-4 w-20" />
-              <Skeleton className="h-4 w-20" />
-              <Skeleton className="h-4 w-20" />
-            </div>
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="flex gap-4">
-                <Skeleton className="h-4 w-16" />
-                <Skeleton className="h-4 w-20" />
-                <Skeleton className="h-4 w-20" />
-                <Skeleton className="h-4 w-20" />
-              </div>
-            ))}
-          </div>
-        </div>
-      </CardContent>
-    </Card>
-  );
-}
-
-/**
- * Skeleton for recent transactions table.
- */
-function TransactionsSkeleton() {
-  return (
-    <div className="space-y-3">
-      {[1, 2, 3, 4, 5].map((i) => (
-        <div key={i} className="flex items-center gap-4 py-2">
-          <Skeleton className="h-4 w-24" />
-          <Skeleton className="h-6 w-20 rounded-full" />
-          <Skeleton className="h-4 w-20" />
-          <Skeleton className="h-4 flex-1" />
-          <Skeleton className="h-8 w-16" />
-        </div>
-      ))}
-    </div>
-  );
-}
 
 /**
  * Async component for Summary Stats.
@@ -149,7 +87,7 @@ export default async function DashboardPage() {
             </Button>
           </CardHeader>
           <CardContent>
-            <Suspense fallback={<TransactionsSkeleton />}>
+            <Suspense fallback={<RecentTransactionsSkeleton />}>
               <RecentTransactionsSection />
             </Suspense>
           </CardContent>

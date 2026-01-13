@@ -6,7 +6,7 @@ import { TransactionList } from "@/components/transactions/transaction-list";
 import { loadMoreTransactions } from "@/lib/actions/load-more";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Navbar } from "@/components/shared/navbar";
-import { TransactionTableSkeleton } from "@/components/shared/skeletons";
+import { TransactionTableSkeleton } from "@/components/transactions/skeletons";
 
 /**
  * Async component for transaction list.

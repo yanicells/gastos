@@ -18,7 +18,7 @@ import {
 } from "@/lib/actions/analytics";
 import { ChartsClient } from "@/components/charts/charts-client";
 import { Navbar } from "@/components/shared/navbar";
-import { ChartsSkeleton } from "@/components/shared/skeletons";
+import { ChartsSkeleton } from "@/components/charts/skeletons";
 
 /**
  * Async component for charts content.
