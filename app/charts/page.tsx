@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import {
@@ -16,25 +17,17 @@ import {
   fetchRollingAverages,
 } from "@/lib/actions/analytics";
 import { ChartsClient } from "@/components/charts/charts-client";
+import { Navbar } from "@/components/shared/navbar";
+import { ChartsSkeleton } from "@/components/shared/skeletons";
 
 /**
- * Charts page - Analytics dashboard with visualizations.
+ * Async component for charts content.
  */
-export default async function ChartsPage() {
-  const supabase = await createClient();
-
-  // Check auth
-  const { data: authData, error: authError } = await supabase.auth.getClaims();
-  if (authError || !authData?.claims) {
-    redirect("/auth/login");
-  }
-
-  // Get current year and month
+async function ChartsSection() {
   const now = new Date();
   const currentYear = now.getFullYear();
   const currentMonth = now.getMonth() + 1;
 
-  // Fetch initial data
   const startDate = `${currentYear}-01-01`;
   const endDate = `${currentYear}-12-31`;
 
@@ -74,5 +67,36 @@ export default async function ChartsPage() {
       fetchComparisonData={fetchComparisonData}
       fetchRollingAverages={fetchRollingAverages}
     />
+  );
+}
+
+/**
+ * Charts skeleton wrapper with navbar.
+ */
+function ChartsSkeletonWithNav() {
+  return (
+    <div className="min-h-svh bg-background">
+      <Navbar />
+      <ChartsSkeleton />
+    </div>
+  );
+}
+
+/**
+ * Charts page - Analytics dashboard with visualizations.
+ */
+export default async function ChartsPage() {
+  const supabase = await createClient();
+
+  // Check auth
+  const { data: authData, error: authError } = await supabase.auth.getClaims();
+  if (authError || !authData?.claims) {
+    redirect("/auth/login");
+  }
+
+  return (
+    <Suspense fallback={<ChartsSkeletonWithNav />}>
+      <ChartsSection />
+    </Suspense>
   );
 }
