@@ -1,18 +1,31 @@
+"use client"
+
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
 /**
  * Charts page skeleton - matches analytics layout.
  */
+import { RefreshCw } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { YearSelector } from "@/components/shared/year-selector";
+
+/**
+ * Charts page skeleton - matches analytics layout.
+ */
 export function ChartsSkeleton() {
+  const currentYear = new Date().getFullYear();
+
   return (
     <div className="container mx-auto px-4 py-6 space-y-6">
       {/* Controls */}
       <div className="flex items-center justify-between">
-        <Skeleton className="h-7 w-40" />
-        <div className="flex gap-2">
-          <Skeleton className="h-10 w-20" />
-          <Skeleton className="h-10 w-10" />
+        <h2 className="text-xl font-semibold">Analytics Overview</h2>
+        <div className="flex items-center gap-2 pointer-events-none opacity-80">
+          <YearSelector value={currentYear} onChange={() => {}} />
+          <Button variant="outline" size="icon" disabled>
+            <RefreshCw className="h-4 w-4" />
+          </Button>
         </div>
       </div>
 

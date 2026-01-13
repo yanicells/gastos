@@ -1,24 +1,15 @@
 import { Suspense } from "react";
-import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
 import { getYearlySummary } from "@/lib/queries/analytics";
 import { getAvailableYears } from "@/lib/queries/transactions";
 import { fetchYearlySummary } from "@/lib/actions/analytics";
 import { SummaryClient } from "@/components/summary/summary-client";
 import { Navbar } from "@/components/shared/navbar";
 import { SummaryTableSkeleton } from "@/components/summary/skeletons";
+import { AuthCheck } from "@/components/shared/auth-check";
 
 /**
  * Skeleton for summary table content.
  */
-function SummaryContentSkeleton() {
-  return (
-    <div className="min-h-svh bg-background">
-      <Navbar />
-      <SummaryTableSkeleton />
-    </div>
-  );
-}
 
 /**
  * Async component for summary content.
@@ -44,18 +35,19 @@ async function SummarySection() {
 /**
  * Summary page - Excel-style monthly overview.
  */
-export default async function SummaryPage() {
-  const supabase = await createClient();
-
-  // Check auth
-  const { data: authData, error: authError } = await supabase.auth.getClaims();
-  if (authError || !authData?.claims) {
-    redirect("/auth/login");
-  }
-
+export default function SummaryPage() {
   return (
-    <Suspense fallback={<SummaryContentSkeleton />}>
-      <SummarySection />
-    </Suspense>
+    <div className="min-h-svh bg-background">
+      <Suspense fallback={null}>
+        <AuthCheck />
+      </Suspense>
+
+      {/* Header */}
+      <Navbar />
+
+      <Suspense fallback={<SummaryTableSkeleton />}>
+        <SummarySection />
+      </Suspense>
+    </div>
   );
 }

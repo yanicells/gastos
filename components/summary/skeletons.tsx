@@ -1,4 +1,6 @@
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+"use client";
+
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
@@ -10,18 +12,26 @@ import {
 } from "@/components/ui/table";
 import { expenseGroups, incomeGroups } from "@/lib/data/types";
 
+import { RefreshCw } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { YearSelector } from "@/components/shared/year-selector";
+
 /**
  * Summary table skeleton - matches the complex layout of MonthlyTable.
  */
 export function SummaryTableSkeleton() {
+  const currentYear = new Date().getFullYear();
+
   return (
     <div className="container mx-auto px-4 py-6">
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
-          <Skeleton className="h-8 w-48" />
-          <div className="flex items-center gap-2">
-            <Skeleton className="h-9 w-30" />
-            <Skeleton className="h-9 w-9" />
+          <CardTitle>Yearly Summary</CardTitle>
+          <div className="flex items-center gap-2 pointer-events-none opacity-80">
+            <YearSelector value={currentYear} onChange={() => {}} />
+            <Button variant="outline" size="icon" disabled>
+              <RefreshCw className="h-4 w-4" />
+            </Button>
           </div>
         </CardHeader>
         <CardContent>

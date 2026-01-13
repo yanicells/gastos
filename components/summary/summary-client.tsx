@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useTransition, useCallback, useRef } from "react";
 import { RefreshCw } from "lucide-react";
-import { Navbar } from "@/components/shared/navbar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { YearSelector } from "@/components/shared/year-selector";
@@ -65,9 +64,6 @@ export function SummaryClient({
 
   return (
     <div className="min-h-svh bg-background">
-      {/* Header */}
-      <Navbar />
-
       {/* Main Content */}
       <main className="container mx-auto px-4 py-6">
         <Card>

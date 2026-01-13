@@ -1,6 +1,4 @@
 import { Suspense } from "react";
-import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
 import {
   getMonthlyTrend,
   getCategoryBreakdown,
@@ -19,6 +17,7 @@ import {
 import { ChartsClient } from "@/components/charts/charts-client";
 import { Navbar } from "@/components/shared/navbar";
 import { ChartsSkeleton } from "@/components/charts/skeletons";
+import { AuthCheck } from "@/components/shared/auth-check";
 
 /**
  * Async component for charts content.
@@ -73,30 +72,23 @@ async function ChartsSection() {
 /**
  * Charts skeleton wrapper with navbar.
  */
-function ChartsSkeletonWithNav() {
-  return (
-    <div className="min-h-svh bg-background">
-      <Navbar />
-      <ChartsSkeleton />
-    </div>
-  );
-}
 
 /**
  * Charts page - Analytics dashboard with visualizations.
  */
-export default async function ChartsPage() {
-  const supabase = await createClient();
-
-  // Check auth
-  const { data: authData, error: authError } = await supabase.auth.getClaims();
-  if (authError || !authData?.claims) {
-    redirect("/auth/login");
-  }
-
+export default function ChartsPage() {
   return (
-    <Suspense fallback={<ChartsSkeletonWithNav />}>
-      <ChartsSection />
-    </Suspense>
+    <div className="min-h-svh bg-background">
+      <Suspense fallback={null}>
+        <AuthCheck />
+      </Suspense>
+
+      {/* Header */}
+      <Navbar />
+
+      <Suspense fallback={<ChartsSkeleton />}>
+        <ChartsSection />
+      </Suspense>
+    </div>
   );
 }
