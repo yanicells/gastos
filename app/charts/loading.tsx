@@ -1,5 +1,5 @@
 import { Navbar } from "@/components/shared/navbar";
-import { ChartsSkeleton } from "@/components/shared/skeletons";
+import { ChartsSkeleton } from "@/components/charts/skeletons";
 
 /**
  * Loading state for charts route.

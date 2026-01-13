@@ -1,5 +1,5 @@
 import { Navbar } from "@/components/shared/navbar";
-import { TransactionsPageSkeleton } from "@/components/shared/skeletons";
+import { TransactionsPageSkeleton } from "@/components/transactions/skeletons";
 
 /**
  * Loading state for transactions route.

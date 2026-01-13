@@ -1,5 +1,5 @@
 import { Navbar } from "@/components/shared/navbar";
-import { DashboardSkeleton } from "@/components/shared/skeletons";
+import { DashboardSkeleton } from "@/components/dashboard/skeletons";
 
 /**
  * Loading state for dashboard route.
