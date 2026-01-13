@@ -1,6 +1,4 @@
 import { Suspense } from "react";
-import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
 import { getRecentTransactions } from "@/lib/queries/transactions";
 import {
   getCurrentMonthStats,
@@ -17,6 +15,9 @@ import {
   RecentTransactionsSkeleton,
 } from "@/components/dashboard/skeletons";
 import Link from "next/link";
+
+// ... imports ...
+import { AuthCheck } from "@/components/shared/auth-check";
 
 /**
  * Async component for Summary Stats.
@@ -45,17 +46,13 @@ async function RecentTransactionsSection() {
  * Right: Summary Stats (streams)
  * Bottom: Recent Transactions (streams)
  */
-export default async function DashboardPage() {
-  const supabase = await createClient();
-
-  // Check auth - this is fast and required before any data
-  const { data: authData, error: authError } = await supabase.auth.getClaims();
-  if (authError || !authData?.claims) {
-    redirect("/auth/login");
-  }
-
+export default function DashboardPage() {
   return (
     <div className="min-h-svh bg-background">
+      <Suspense fallback={null}>
+        <AuthCheck />
+      </Suspense>
+
       {/* Header */}
       <Navbar />
 
