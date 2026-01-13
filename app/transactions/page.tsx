@@ -1,12 +1,11 @@
 import { Suspense } from "react";
-import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
 import { getTransactions } from "@/lib/queries/transactions";
 import { TransactionList } from "@/components/transactions/transaction-list";
 import { loadMoreTransactions } from "@/lib/actions/load-more";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Navbar } from "@/components/shared/navbar";
 import { TransactionTableSkeleton } from "@/components/transactions/skeletons";
+import { AuthCheck } from "@/components/shared/auth-check";
 
 /**
  * Async component for transaction list.
@@ -26,17 +25,13 @@ async function TransactionListSection() {
 /**
  * Transactions page - full list with infinite scroll.
  */
-export default async function TransactionsPage() {
-  const supabase = await createClient();
-
-  // Check auth
-  const { data: authData, error: authError } = await supabase.auth.getClaims();
-  if (authError || !authData?.claims) {
-    redirect("/auth/login");
-  }
-
+export default function TransactionsPage() {
   return (
     <div className="min-h-svh bg-background">
+      <Suspense fallback={null}>
+        <AuthCheck />
+      </Suspense>
+
       {/* Header */}
       <Navbar />
 
