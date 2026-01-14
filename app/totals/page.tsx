@@ -17,9 +17,7 @@ async function TotalsSection() {
   ]);
 
   return (
-    <div className="container mx-auto px-4 py-8 space-y-8">
-      <h1 className="text-3xl font-bold tracking-tight">All-time Totals</h1>
-
+    <div className="space-y-8">
       <TotalsCards
         income={totals.data.income}
         expenses={totals.data.expenses}
@@ -43,9 +41,12 @@ export default function TotalsPage() {
 
       <Navbar />
 
-      <Suspense fallback={<TotalsSkeleton />}>
-        <TotalsSection />
-      </Suspense>
+      <main className="container mx-auto px-4 py-8 space-y-8">
+        <h1 className="text-2xl font-bold tracking-tight">All-time Totals</h1>
+        <Suspense fallback={<TotalsSkeleton />}>
+          <TotalsSection />
+        </Suspense>
+      </main>
     </div>
   );
 }

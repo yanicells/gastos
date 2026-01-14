@@ -5,7 +5,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export function TotalsSkeleton() {
   return (
-    <div className="container mx-auto px-4 py-8 space-y-8">
+    <div className="space-y-8">
       {/* Totals Cards Skeleton */}
       <div className="grid gap-4 md:grid-cols-3">
         {[1, 2, 3].map((i) => (
