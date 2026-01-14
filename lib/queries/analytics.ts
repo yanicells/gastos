@@ -452,3 +452,45 @@ export async function getRollingAverages(year?: number): Promise<{
     error: null,
   };
 }
+
+/**
+ * Get all-time totals (income, expenses, savings).
+ */
+export async function getAllTimeTotals(): Promise<{
+  data: PeriodStats;
+  error: Error | null;
+}> {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("transactions")
+    .select("type, amount")
+    .is("deleted_at", null);
+
+  if (error) {
+    return {
+      data: { income: 0, expenses: 0, savings: 0 },
+      error: new Error(error.message),
+    };
+  }
+
+  let income = 0;
+  let expenses = 0;
+
+  for (const row of data ?? []) {
+    const typeConfig =
+      transactionTypes[row.type as keyof typeof transactionTypes];
+    const amount = Number(row.amount);
+
+    if (typeConfig?.category === "income") {
+      income += amount;
+    } else {
+      expenses += amount;
+    }
+  }
+
+  return {
+    data: { income, expenses, savings: income - expenses },
+    error: null,
+  };
+}

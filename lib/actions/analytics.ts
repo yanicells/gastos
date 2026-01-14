@@ -8,6 +8,7 @@ import {
   getComparisonData,
   getCurrentMonthStats,
   getRollingAverages,
+  getAllTimeTotals,
 } from "@/lib/queries/analytics";
 
 /**
@@ -65,4 +66,11 @@ export async function fetchCurrentMonthStats() {
  */
 export async function fetchRollingAverages(year?: number) {
   return getRollingAverages(year);
+}
+
+/**
+ * Server action to fetch all-time totals.
+ */
+export async function fetchAllTimeTotals() {
+  return getAllTimeTotals();
 }
