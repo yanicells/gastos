@@ -11,6 +11,7 @@ import {
   Receipt,
   BarChart3,
   PieChart,
+  Wallet,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -18,7 +19,6 @@ import {
   Sheet,
   SheetContent,
   SheetTrigger,
-  SheetHeader,
   SheetTitle,
   SheetClose,
 } from "@/components/ui/sheet";
@@ -40,6 +40,7 @@ export function Navbar() {
     { href: "/transactions", label: "Transactions", icon: Receipt },
     { href: "/summary", label: "Summary", icon: BarChart3 },
     { href: "/charts", label: "Charts", icon: PieChart },
+    { href: "/totals", label: "Totals", icon: Wallet },
   ];
 
   return (
