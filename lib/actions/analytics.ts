@@ -69,8 +69,8 @@ export async function fetchRollingAverages(year?: number) {
 }
 
 /**
- * Server action to fetch all-time totals.
+ * Server action to fetch totals with optional year/month filtering.
  */
-export async function fetchAllTimeTotals() {
-  return getAllTimeTotals();
+export async function fetchAllTimeTotals(year?: number, month?: number) {
+  return getAllTimeTotals(year, month);
 }

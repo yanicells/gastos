@@ -454,18 +454,38 @@ export async function getRollingAverages(year?: number): Promise<{
 }
 
 /**
- * Get all-time totals (income, expenses, savings).
+ * Get totals (income, expenses, savings) with optional year/month filtering.
+ * - No params: all-time totals
+ * - Year only: totals for that year
+ * - Year + month: totals for that specific month
  */
-export async function getAllTimeTotals(): Promise<{
+export async function getAllTimeTotals(
+  year?: number,
+  month?: number
+): Promise<{
   data: PeriodStats;
   error: Error | null;
 }> {
   const supabase = await createClient();
 
-  const { data, error } = await supabase
+  let query = supabase
     .from("transactions")
     .select("type, amount")
     .is("deleted_at", null);
+
+  // Apply year filter
+  if (year) {
+    const startDate = month
+      ? `${year}-${String(month).padStart(2, "0")}-01`
+      : `${year}-01-01`;
+    const endDate = month
+      ? new Date(year, month, 0).toISOString().split("T")[0]
+      : `${year}-12-31`;
+
+    query = query.gte("date", startDate).lte("date", endDate);
+  }
+
+  const { data, error } = await query;
 
   if (error) {
     return {
