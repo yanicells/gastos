@@ -7,7 +7,6 @@ import { YearSelector } from "@/components/shared/year-selector";
 import { MonthSelector } from "@/components/shared/month-selector";
 import { TotalsCards } from "@/components/totals/totals-cards";
 import { CategoryBreakdownList } from "@/components/totals/category-breakdown-list";
-import { TotalsSkeleton } from "@/components/totals/skeletons";
 import type { PeriodStats } from "@/lib/types/analytics";
 import type { CategoryBreakdown } from "@/lib/types/transaction";
 
@@ -26,7 +25,6 @@ interface TotalsClientProps {
     category?: "income" | "expense"
   ) => Promise<{ data: CategoryBreakdown[]; error: Error | null }>;
 }
-
 const MONTHS = [
   "Jan",
   "Feb",
@@ -41,7 +39,6 @@ const MONTHS = [
   "Nov",
   "Dec",
 ];
-
 export function TotalsClient({
   initialTotals,
   initialIncomeBreakdown,
@@ -110,7 +107,7 @@ export function TotalsClient({
 
   // Build the title based on selection
   const getTitle = () => {
-    if (!selectedYear) return "All-time Totals";
+    if (!selectedYear) return "Totals";
     if (selectedMonth)
       return `${MONTHS[selectedMonth - 1]} ${selectedYear} Totals`;
     return `${selectedYear} Totals`;
@@ -157,22 +154,22 @@ export function TotalsClient({
       </div>
 
       {/* Content */}
-      {isPending ? (
-        <TotalsSkeleton />
-      ) : (
-        <div className="space-y-8">
-          <TotalsCards
-            income={totals.income}
-            expenses={totals.expenses}
-            savings={totals.savings}
-          />
+      <div
+        className={`space-y-8 ${
+          isPending ? "opacity-60 pointer-events-none" : ""
+        }`}
+      >
+        <TotalsCards
+          income={totals.income}
+          expenses={totals.expenses}
+          savings={totals.savings}
+        />
 
-          <div className="grid gap-6 md:grid-cols-2">
-            <CategoryBreakdownList data={incomeBreakdown} type="income" />
-            <CategoryBreakdownList data={expenseBreakdown} type="expense" />
-          </div>
+        <div className="grid gap-6 md:grid-cols-2">
+          <CategoryBreakdownList data={incomeBreakdown} type="income" />
+          <CategoryBreakdownList data={expenseBreakdown} type="expense" />
         </div>
-      )}
+      </div>
     </div>
   );
 }
