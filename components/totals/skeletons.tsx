@@ -8,15 +8,13 @@ import { YearSelector } from "@/components/shared/year-selector";
 import { MonthSelector } from "@/components/shared/month-selector";
 
 export function TotalsSkeleton() {
-  const currentYear = new Date().getFullYear();
-
   return (
     <div className="space-y-6">
       {/* Header with filters - Simulated state */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <h1 className="text-2xl font-bold tracking-tight">Totals</h1>
         <div className="flex items-center gap-2 pointer-events-none opacity-80">
-          <YearSelector value={currentYear} onChange={() => {}} />
+          <YearSelector value={null} onChange={() => {}} />
           <MonthSelector value={null} onChange={() => {}} disabled />
           <Button variant="outline" size="icon" disabled>
             <RefreshCw className="h-4 w-4" />

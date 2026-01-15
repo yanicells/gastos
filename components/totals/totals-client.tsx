@@ -131,7 +131,7 @@ export function TotalsClient({
             </Button>
           )}
           <YearSelector
-            value={selectedYear ?? availableYears[0]}
+            value={selectedYear}
             onChange={handleYearChange}
             years={availableYears}
           />

@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/popover";
 
 interface YearSelectorProps {
-  value: number;
+  value: number | null;
   onChange: (year: number) => void;
   /** Years to show in dropdown. Defaults to last 5 years including current. */
   years?: number[];
@@ -43,17 +43,20 @@ export function YearSelector({ value, onChange, years }: YearSelectorProps) {
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[120px] justify-between"
+          className={cn(
+            "w-30 justify-between",
+            !value && "text-muted-foreground"
+          )}
         >
-          {value}
+          {value || "Year"}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[240px] p-3" align="end">
+      <PopoverContent className="w-60 p-3" align="end">
         <div className="text-sm font-medium text-muted-foreground px-1">
           Select Year
         </div>
-        <div className="grid grid-cols-3 gap-2 max-h-[300px] overflow-y-auto pr-1">
+        <div className="grid grid-cols-3 gap-2 max-h-75 overflow-y-auto pr-1">
           {yearOptions.map((year) => (
             <Button
               key={year}
