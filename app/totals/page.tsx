@@ -3,32 +3,30 @@ import {
   fetchAllTimeTotals,
   fetchCategoryBreakdown,
 } from "@/lib/actions/analytics";
+import { getAvailableYears } from "@/lib/queries/transactions";
 import { Navbar } from "@/components/shared/navbar";
 import { AuthCheck } from "@/components/shared/auth-check";
-import { TotalsCards } from "@/components/totals/totals-cards";
-import { CategoryBreakdownList } from "@/components/totals/category-breakdown-list";
+import { TotalsClient } from "@/components/totals/totals-client";
 import { TotalsSkeleton } from "@/components/totals/skeletons";
 
 async function TotalsSection() {
-  const [totals, incomeBreakdown, expenseBreakdown] = await Promise.all([
-    fetchAllTimeTotals(),
-    fetchCategoryBreakdown(undefined, undefined, "income"),
-    fetchCategoryBreakdown(undefined, undefined, "expense"),
-  ]);
+  const [totals, incomeBreakdown, expenseBreakdown, availableYears] =
+    await Promise.all([
+      fetchAllTimeTotals(),
+      fetchCategoryBreakdown(undefined, undefined, "income"),
+      fetchCategoryBreakdown(undefined, undefined, "expense"),
+      getAvailableYears(),
+    ]);
 
   return (
-    <div className="space-y-8">
-      <TotalsCards
-        income={totals.data.income}
-        expenses={totals.data.expenses}
-        savings={totals.data.savings}
-      />
-
-      <div className="grid gap-6 md:grid-cols-2">
-        <CategoryBreakdownList data={incomeBreakdown.data} type="income" />
-        <CategoryBreakdownList data={expenseBreakdown.data} type="expense" />
-      </div>
-    </div>
+    <TotalsClient
+      initialTotals={totals.data}
+      initialIncomeBreakdown={incomeBreakdown.data}
+      initialExpenseBreakdown={expenseBreakdown.data}
+      availableYears={availableYears}
+      fetchTotals={fetchAllTimeTotals}
+      fetchBreakdown={fetchCategoryBreakdown}
+    />
   );
 }
 
@@ -41,8 +39,7 @@ export default function TotalsPage() {
 
       <Navbar />
 
-      <main className="container mx-auto px-4 py-8 space-y-8">
-        <h1 className="text-2xl font-bold tracking-tight">All-time Totals</h1>
+      <main className="container mx-auto px-4 py-8">
         <Suspense fallback={<TotalsSkeleton />}>
           <TotalsSection />
         </Suspense>
