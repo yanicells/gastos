@@ -10,7 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Wallet, TrendingDown, PiggyBank } from "lucide-react";
+import { Wallet, TrendingDown, PiggyBank, Receipt } from "lucide-react";
 import type { PeriodStats, RollingAverages } from "@/lib/types/analytics";
 
 interface SummaryStatsProps {
@@ -42,15 +42,7 @@ export function SummaryStats({
   return (
     <Card className="h-full">
       <CardContent className="space-y-6 pt-6">
-        <div>
-          <p className="text-sm text-muted-foreground font-medium">
-            Today you spent
-          </p>
-          <p className="text-4xl font-bold tracking-tight mt-1">
-            {formatCurrency(todaySpend)}
-          </p>
-        </div>
-        <ThisMonthView stats={currentMonth} />
+        <ThisMonthView stats={currentMonth} todaySpend={todaySpend} />
         <AveragesView averages={averages} />
       </CardContent>
     </Card>
@@ -58,11 +50,24 @@ export function SummaryStats({
 }
 
 /**
- * This month view - 3 stat cards.
+ * This month view - 4 stat cards.
  */
-function ThisMonthView({ stats }: { stats: PeriodStats }) {
+function ThisMonthView({
+  stats,
+  todaySpend,
+}: {
+  stats: PeriodStats;
+  todaySpend: number;
+}) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <StatCard
+        label="Today"
+        value={todaySpend}
+        icon={<Receipt className="h-4 w-4" />}
+        color="text-orange-500"
+        bgColor="bg-orange-500/10"
+      />
       <StatCard
         label="Income"
         value={stats.income}
