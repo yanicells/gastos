@@ -3,6 +3,7 @@ import { getRecentTransactions } from "@/lib/queries/transactions";
 import {
   getCurrentMonthStats,
   getRollingAverages,
+  getTodaySpend,
 } from "@/lib/queries/analytics";
 import { Navbar } from "@/components/shared/navbar";
 import { QuickAddForm } from "@/components/dashboard/quick-add-form";
@@ -23,12 +24,23 @@ import { AuthCheck } from "@/components/shared/auth-check";
  * Async component for Summary Stats.
  */
 async function SummaryStatsSection() {
-  const [{ data: currentMonthStats }, { data: averages }] = await Promise.all([
+  const [
+    { data: currentMonthStats },
+    { data: averages },
+    { data: todaySpend },
+  ] = await Promise.all([
     getCurrentMonthStats(),
     getRollingAverages(),
+    getTodaySpend(),
   ]);
 
-  return <SummaryStats currentMonth={currentMonthStats} averages={averages} />;
+  return (
+    <SummaryStats
+      currentMonth={currentMonthStats}
+      averages={averages}
+      todaySpend={todaySpend}
+    />
+  );
 }
 
 /**
