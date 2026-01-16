@@ -514,3 +514,38 @@ export async function getAllTimeTotals(
     error: null,
   };
 }
+
+/**
+ * Get total expenses for today.
+ */
+export async function getTodaySpend(): Promise<{
+  data: number;
+  error: Error | null;
+}> {
+  const supabase = await createClient();
+  const today = new Date().toISOString().split("T")[0];
+
+  const { data, error } = await supabase
+    .from("transactions")
+    .select("type, amount")
+    .eq("date", today)
+    .is("deleted_at", null);
+
+  if (error) {
+    return { data: 0, error: new Error(error.message) };
+  }
+
+  let todaySpend = 0;
+
+  for (const row of data ?? []) {
+    const typeConfig =
+      transactionTypes[row.type as keyof typeof transactionTypes];
+
+    // Only count expenses
+    if (typeConfig?.category === "expense") {
+      todaySpend += Number(row.amount);
+    }
+  }
+
+  return { data: todaySpend, error: null };
+}
