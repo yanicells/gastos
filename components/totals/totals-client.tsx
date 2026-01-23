@@ -115,42 +115,42 @@ export function TotalsClient({
 
   return (
     <div className="space-y-6">
-      {/* Header with filters */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      {/* Header with refresh button */}
+      <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold tracking-tight">{getTitle()}</h1>
-        <div className="flex flex-wrap items-center gap-2">
-          {selectedYear && (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleReset}
-              className="text-muted-foreground"
-            >
-              <RotateCcw className="h-4 w-4 mr-1" />
-              All Time
-            </Button>
-          )}
-          <YearSelector
-            value={selectedYear}
-            onChange={handleYearChange}
-            years={availableYears}
-          />
-          <MonthSelector
-            value={selectedMonth}
-            onChange={handleMonthChange}
-            disabled={!selectedYear}
-          />
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={() => refreshData(selectedYear, selectedMonth)}
+          disabled={isPending}
+        >
+          <RefreshCw className={`h-4 w-4 ${isPending ? "animate-spin" : ""}`} />
+        </Button>
+      </div>
+
+      {/* Filters */}
+      <div className="flex flex-wrap items-center gap-2">
+        {selectedYear && (
           <Button
             variant="outline"
-            size="icon"
-            onClick={() => refreshData(selectedYear, selectedMonth)}
-            disabled={isPending}
+            size="sm"
+            onClick={handleReset}
+            className="text-muted-foreground"
           >
-            <RefreshCw
-              className={`h-4 w-4 ${isPending ? "animate-spin" : ""}`}
-            />
+            <RotateCcw className="h-4 w-4 mr-1" />
+            All Time
           </Button>
-        </div>
+        )}
+        <YearSelector
+          value={selectedYear}
+          onChange={handleYearChange}
+          years={availableYears}
+        />
+        <MonthSelector
+          value={selectedMonth}
+          onChange={handleMonthChange}
+          disabled={!selectedYear}
+        />
       </div>
 
       {/* Content */}
