@@ -10,6 +10,7 @@ A sleek, minimal personal finance tracker built for speed and simplicity. Optimi
 - **Visual Analytics**: Interactive charts to help you visualize spending patterns and long-term habits.
 - **Secure Authentication**: Robust security powered by Supabase with GitHub integration.
 - **Progressive Web App**: Fully optimized for installation on iOS, Android, and Desktop.
+- **Totals**:
 
 ## PWA Support
 
