@@ -138,7 +138,7 @@ export function TotalsClient({
             className="text-muted-foreground"
           >
             <RotateCcw className="h-4 w-4 mr-1" />
-            All Time
+            Reset
           </Button>
         )}
         <YearSelector
