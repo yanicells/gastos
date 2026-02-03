@@ -2,24 +2,27 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
 /**
- * Skeleton for SummaryStats - matches the 2x3 grid layout
+ * Skeleton for SummaryStats - matches the 2x3 grid layout with header
  */
 export function SummaryStatsSkeleton() {
   return (
-    <Card className="h-full">
-      <CardContent className="pt-6">
+    <Card className="h-full flex flex-col">
+      <CardHeader>
+        <Skeleton className="h-6 w-32" />
+      </CardHeader>
+      <CardContent className="flex-1">
         {/* Stats cards - 2x3 grid */}
-        <div className="grid grid-cols-2 gap-4 lg:grid-cols-3">
+        <div className="grid grid-cols-2 gap-4 lg:grid-cols-3 h-full">
           {[1, 2, 3, 4, 5, 6].map((i) => (
             <div
               key={i}
-              className="flex flex-col gap-2 p-4 rounded-xl border bg-card/50"
+              className="flex flex-col justify-center gap-2 p-4 rounded-xl border bg-card/50 h-full"
             >
               <div className="flex items-center gap-2">
-                <Skeleton className="h-7 w-7 rounded-md" />
-                <Skeleton className="h-4 w-16" />
+                <Skeleton className="h-7 w-7 rounded-md lg:h-10 lg:w-10" />
+                <Skeleton className="h-4 w-16 lg:h-5 lg:w-24" />
               </div>
-              <Skeleton className="h-8 w-28" />
+              <Skeleton className="h-8 w-28 lg:h-10 lg:w-40" />
             </div>
           ))}
         </div>
