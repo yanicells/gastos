@@ -15,7 +15,7 @@ import type {
 export async function getCategoryBreakdown(
   startDate?: string,
   endDate?: string,
-  category?: "expense" | "income"
+  category?: "expense" | "income",
 ): Promise<{ data: CategoryBreakdown[]; error: Error | null }> {
   const supabase = await createClient();
 
@@ -64,7 +64,7 @@ export async function getCategoryBreakdown(
 
   // Sort by total descending
   const result = Array.from(aggregated.values()).sort(
-    (a, b) => b.total - a.total
+    (a, b) => b.total - a.total,
   );
 
   return { data: result, error: null };
@@ -122,7 +122,7 @@ export async function getMonthlyTrend(year: number): Promise<{
 export async function getTopCategories(
   limit: number = 5,
   startDate?: string,
-  endDate?: string
+  endDate?: string,
 ): Promise<{ data: CategoryBreakdown[]; error: Error | null }> {
   const result = await getCategoryBreakdown(startDate, endDate, "expense");
 
@@ -231,7 +231,7 @@ export async function getYearlySummary(year: number): Promise<{
  */
 export async function getComparisonData(
   year: number,
-  month: number
+  month: number,
 ): Promise<{
   currentMonth: { income: number; expense: number };
   previousMonth: { income: number; expense: number };
@@ -259,7 +259,7 @@ export async function getComparisonData(
     .from("transactions")
     .select("date, type, amount")
     .or(
-      `and(date.gte.${currentStart},date.lte.${currentEnd}),and(date.gte.${prevStart},date.lte.${prevEnd}),and(date.gte.${lastYearStart},date.lte.${lastYearEnd})`
+      `and(date.gte.${currentStart},date.lte.${currentEnd}),and(date.gte.${prevStart},date.lte.${prevEnd}),and(date.gte.${lastYearStart},date.lte.${lastYearEnd})`,
     )
     .is("deleted_at", null);
 
@@ -416,8 +416,8 @@ export async function getRollingAverages(year?: number): Promise<{
     daysDiff = Math.max(
       1,
       Math.floor(
-        (now.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
-      ) + 1
+        (now.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24),
+      ) + 1,
     );
     weeksDiff = Math.max(1, Math.ceil(daysDiff / 7));
     monthsDiff = Math.max(1, now.getMonth() + 1);
@@ -461,7 +461,7 @@ export async function getRollingAverages(year?: number): Promise<{
  */
 export async function getAllTimeTotals(
   year?: number,
-  month?: number
+  month?: number,
 ): Promise<{
   data: PeriodStats;
   error: Error | null;
@@ -548,4 +548,104 @@ export async function getTodaySpend(): Promise<{
   }
 
   return { data: todaySpend, error: null };
+}
+
+/**
+ * Get total expenses for the current week (Monday to today).
+ * Week starts on Monday.
+ */
+export async function getWeeklyExpenses(): Promise<{
+  data: number;
+  error: Error | null;
+}> {
+  const supabase = await createClient();
+  const now = new Date();
+  const today = now.toISOString().split("T")[0];
+
+  // Calculate Monday of current week
+  // getDay() returns 0 for Sunday, 1 for Monday, etc.
+  const dayOfWeek = now.getDay();
+  // If Sunday (0), we need to go back 6 days to get to Monday
+  // If Monday (1), we need to go back 0 days
+  // Otherwise, go back (dayOfWeek - 1) days
+  const daysToSubtract = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+  const monday = new Date(now);
+  monday.setDate(now.getDate() - daysToSubtract);
+  const mondayStr = monday.toISOString().split("T")[0];
+
+  const { data, error } = await supabase
+    .from("transactions")
+    .select("type, amount")
+    .gte("date", mondayStr)
+    .lte("date", today)
+    .is("deleted_at", null);
+
+  if (error) {
+    return { data: 0, error: new Error(error.message) };
+  }
+
+  let weeklyExpenses = 0;
+
+  for (const row of data ?? []) {
+    const typeConfig =
+      transactionTypes[row.type as keyof typeof transactionTypes];
+
+    // Only count expenses
+    if (typeConfig?.category === "expense") {
+      weeklyExpenses += Number(row.amount);
+    }
+  }
+
+  return { data: weeklyExpenses, error: null };
+}
+
+/**
+ * Get weekly savings target (this month income / number of weeks in the month).
+ */
+export async function getWeeklySavings(): Promise<{
+  data: number;
+  error: Error | null;
+}> {
+  const supabase = await createClient();
+
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth() + 1;
+
+  const startDate = `${year}-${String(month).padStart(2, "0")}-01`;
+  const endDate = new Date(year, month, 0).toISOString().split("T")[0];
+
+  // Calculate number of weeks in the month
+  // Get the number of days in the month
+  const daysInMonth = new Date(year, month, 0).getDate();
+  // A month typically has 4-5 weeks. We'll use ceil(daysInMonth / 7)
+  const weeksInMonth = Math.ceil(daysInMonth / 7);
+
+  const { data, error } = await supabase
+    .from("transactions")
+    .select("type, amount")
+    .gte("date", startDate)
+    .lte("date", endDate)
+    .is("deleted_at", null);
+
+  if (error) {
+    return { data: 0, error: new Error(error.message) };
+  }
+
+  let monthlyIncome = 0;
+
+  for (const row of data ?? []) {
+    const typeConfig =
+      transactionTypes[row.type as keyof typeof transactionTypes];
+
+    // Only count income
+    if (typeConfig?.category === "income") {
+      monthlyIncome += Number(row.amount);
+    }
+  }
+
+  // Weekly savings = monthly income / weeks in month
+  const weeklySavings = monthlyIncome / weeksInMonth;
+
+  return { data: weeklySavings, error: null };
 }
