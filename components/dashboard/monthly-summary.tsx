@@ -1,22 +1,21 @@
 "use client";
 
 import { Card, CardContent } from "@/components/ui/card";
-
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Wallet, TrendingDown, PiggyBank, Receipt } from "lucide-react";
-import type { PeriodStats, RollingAverages } from "@/lib/types/analytics";
+  Wallet,
+  TrendingDown,
+  PiggyBank,
+  Receipt,
+  Calendar,
+  Target,
+} from "lucide-react";
+import type { PeriodStats } from "@/lib/types/analytics";
 
 interface SummaryStatsProps {
   currentMonth: PeriodStats;
-  averages: RollingAverages;
   todaySpend: number;
+  weeklyExpenses: number;
+  weeklySavings: number;
 }
 
 /**
@@ -32,64 +31,65 @@ function formatCurrency(amount: number): string {
 }
 
 /**
- * Summary stats component with tabs for "This Month" and "Averages".
+ * Summary stats component with 2x3 grid of stat cards.
  */
 export function SummaryStats({
   currentMonth,
-  averages,
   todaySpend,
+  weeklyExpenses,
+  weeklySavings,
 }: SummaryStatsProps) {
   return (
     <Card className="h-full">
-      <CardContent className="space-y-6 pt-6">
-        <ThisMonthView stats={currentMonth} todaySpend={todaySpend} />
-        <AveragesView averages={averages} />
+      <CardContent className="pt-6">
+        <div className="grid grid-cols-2 gap-4 lg:grid-cols-3">
+          <StatCard
+            label="Today"
+            value={todaySpend}
+            icon={<Receipt className="h-4 w-4" />}
+            color="text-orange-500"
+            bgColor="bg-orange-500/10"
+          />
+          <StatCard
+            label="Income"
+            value={currentMonth.income}
+            icon={<Wallet className="h-4 w-4" />}
+            color="text-green-500"
+            bgColor="bg-green-500/10"
+          />
+          <StatCard
+            label="Expenses"
+            value={currentMonth.expenses}
+            icon={<TrendingDown className="h-4 w-4" />}
+            color="text-red-500"
+            bgColor="bg-red-500/10"
+          />
+          <StatCard
+            label="Savings"
+            value={currentMonth.savings}
+            icon={<PiggyBank className="h-4 w-4" />}
+            color={currentMonth.savings >= 0 ? "text-blue-500" : "text-red-500"}
+            bgColor={
+              currentMonth.savings >= 0 ? "bg-blue-500/10" : "bg-red-500/10"
+            }
+          />
+          <StatCard
+            label="Weekly"
+            value={weeklyExpenses}
+            icon={<Calendar className="h-4 w-4" />}
+            color="text-rose-500"
+            bgColor="bg-rose-500/10"
+          />
+          <StatCard
+            label="Weekly Savings"
+            value={weeklySavings}
+            icon={<Target className="h-4 w-4" />}
+            color="text-cyan-500"
+            bgColor="bg-cyan-500/10"
+          />
+        </div>
       </CardContent>
     </Card>
-  );
-}
-
-/**
- * This month view - 4 stat cards.
- */
-function ThisMonthView({
-  stats,
-  todaySpend,
-}: {
-  stats: PeriodStats;
-  todaySpend: number;
-}) {
-  return (
-    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-      <StatCard
-        label="Today"
-        value={todaySpend}
-        icon={<Receipt className="h-4 w-4" />}
-        color="text-orange-500"
-        bgColor="bg-orange-500/10"
-      />
-      <StatCard
-        label="Income"
-        value={stats.income}
-        icon={<Wallet className="h-4 w-4" />}
-        color="text-green-500"
-        bgColor="bg-green-500/10"
-      />
-      <StatCard
-        label="Expenses"
-        value={stats.expenses}
-        icon={<TrendingDown className="h-4 w-4" />}
-        color="text-red-500"
-        bgColor="bg-red-500/10"
-      />
-      <StatCard
-        label="Savings"
-        value={stats.savings}
-        icon={<PiggyBank className="h-4 w-4" />}
-        color={stats.savings >= 0 ? "text-blue-500" : "text-red-500"}
-        bgColor={stats.savings >= 0 ? "bg-blue-500/10" : "bg-red-500/10"}
-      />
-    </div>
   );
 }
 
@@ -122,64 +122,6 @@ function StatCard({
           {formatCurrency(value)}
         </span>
       </div>
-    </div>
-  );
-}
-
-/**
- * Averages view - table with daily/weekly/monthly.
- */
-function AveragesView({ averages }: { averages: RollingAverages }) {
-  return (
-    <div className="rounded-lg border overflow-hidden">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="w-25">Metric</TableHead>
-            <TableHead className="text-right">Daily</TableHead>
-            <TableHead className="text-right">Weekly</TableHead>
-            <TableHead className="text-right">Monthly</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          <TableRow>
-            <TableCell className="font-medium text-green-500">Income</TableCell>
-            <TableCell className="text-right tabular-nums">
-              {formatCurrency(averages.daily.income)}
-            </TableCell>
-            <TableCell className="text-right tabular-nums">
-              {formatCurrency(averages.weekly.income)}
-            </TableCell>
-            <TableCell className="text-right tabular-nums">
-              {formatCurrency(averages.monthly.income)}
-            </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell className="font-medium text-red-500">Expenses</TableCell>
-            <TableCell className="text-right tabular-nums">
-              {formatCurrency(averages.daily.expenses)}
-            </TableCell>
-            <TableCell className="text-right tabular-nums">
-              {formatCurrency(averages.weekly.expenses)}
-            </TableCell>
-            <TableCell className="text-right tabular-nums">
-              {formatCurrency(averages.monthly.expenses)}
-            </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell className="font-medium text-blue-500">Savings</TableCell>
-            <TableCell className="text-right tabular-nums">
-              {formatCurrency(averages.daily.savings)}
-            </TableCell>
-            <TableCell className="text-right tabular-nums">
-              {formatCurrency(averages.weekly.savings)}
-            </TableCell>
-            <TableCell className="text-right tabular-nums">
-              {formatCurrency(averages.monthly.savings)}
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
     </div>
   );
 }

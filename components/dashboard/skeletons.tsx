@@ -1,24 +1,16 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 
 /**
- * Skeleton for SummaryStats - matches the card layout in page.tsx
+ * Skeleton for SummaryStats - matches the 2x3 grid layout
  */
 export function SummaryStatsSkeleton() {
   return (
     <Card className="h-full">
-      <CardContent className="space-y-6 pt-6">
-        {/* Stats cards */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          {[1, 2, 3, 4].map((i) => (
+      <CardContent className="pt-6">
+        {/* Stats cards - 2x3 grid */}
+        <div className="grid grid-cols-2 gap-4 lg:grid-cols-3">
+          {[1, 2, 3, 4, 5, 6].map((i) => (
             <div
               key={i}
               className="flex flex-col gap-2 p-4 rounded-xl border bg-card/50"
@@ -30,45 +22,6 @@ export function SummaryStatsSkeleton() {
               <Skeleton className="h-8 w-28" />
             </div>
           ))}
-        </div>
-        {/* Averages table */}
-        <div className="rounded-lg border overflow-hidden">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="w-25">
-                  <Skeleton className="h-4 w-16" />
-                </TableHead>
-                <TableHead className="text-right">
-                  <Skeleton className="h-4 w-12 ml-auto" />
-                </TableHead>
-                <TableHead className="text-right">
-                  <Skeleton className="h-4 w-12 ml-auto" />
-                </TableHead>
-                <TableHead className="text-right">
-                  <Skeleton className="h-4 w-12 ml-auto" />
-                </TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {[1, 2, 3].map((i) => (
-                <TableRow key={i}>
-                  <TableCell>
-                    <Skeleton className="h-4 w-20" />
-                  </TableCell>
-                  <TableCell>
-                    <Skeleton className="h-4 w-16 ml-auto" />
-                  </TableCell>
-                  <TableCell>
-                    <Skeleton className="h-4 w-16 ml-auto" />
-                  </TableCell>
-                  <TableCell>
-                    <Skeleton className="h-4 w-16 ml-auto" />
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
         </div>
       </CardContent>
     </Card>

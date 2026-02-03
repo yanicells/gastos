@@ -2,8 +2,9 @@ import { Suspense } from "react";
 import { getRecentTransactions } from "@/lib/queries/transactions";
 import {
   getCurrentMonthStats,
-  getRollingAverages,
   getTodaySpend,
+  getWeeklyExpenses,
+  getWeeklySavings,
 } from "@/lib/queries/analytics";
 import { Navbar } from "@/components/shared/navbar";
 import { QuickAddForm } from "@/components/dashboard/quick-add-form";
@@ -26,19 +27,22 @@ import { AuthCheck } from "@/components/shared/auth-check";
 async function SummaryStatsSection() {
   const [
     { data: currentMonthStats },
-    { data: averages },
     { data: todaySpend },
+    { data: weeklyExpenses },
+    { data: weeklySavings },
   ] = await Promise.all([
     getCurrentMonthStats(),
-    getRollingAverages(),
     getTodaySpend(),
+    getWeeklyExpenses(),
+    getWeeklySavings(),
   ]);
 
   return (
     <SummaryStats
       currentMonth={currentMonthStats}
-      averages={averages}
       todaySpend={todaySpend}
+      weeklyExpenses={weeklyExpenses}
+      weeklySavings={weeklySavings}
     />
   );
 }
