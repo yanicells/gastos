@@ -19,10 +19,10 @@ export function SummaryStatsSkeleton() {
               className="flex flex-col justify-center gap-2 p-4 rounded-xl border bg-card/50 h-full"
             >
               <div className="flex items-center gap-2">
-                <Skeleton className="h-7 w-7 rounded-md lg:h-10 lg:w-10" />
-                <Skeleton className="h-4 w-16 lg:h-5 lg:w-24" />
+                <Skeleton className="h-7 w-7 rounded-md lg:h-9 lg:w-9" />
+                <Skeleton className="h-4 w-16 lg:h-5 lg:w-20" />
               </div>
-              <Skeleton className="h-8 w-28 lg:h-10 lg:w-40" />
+              <Skeleton className="h-8 w-28 lg:h-9 lg:w-32" />
             </div>
           ))}
         </div>

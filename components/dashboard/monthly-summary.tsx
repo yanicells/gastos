@@ -49,42 +49,42 @@ export function SummaryStats({
           <StatCard
             label="Today"
             value={todaySpend}
-            icon={<Receipt className="h-4 w-4 lg:h-6 lg:w-6" />}
+            icon={<Receipt className="h-4 w-4 lg:h-5 lg:w-5" />}
             color="text-orange-500"
             bgColor="bg-orange-500/10"
           />
           <StatCard
             label="Weekly"
             value={weeklyExpenses}
-            icon={<Calendar className="h-4 w-4 lg:h-6 lg:w-6" />}
+            icon={<Calendar className="h-4 w-4 lg:h-5 lg:w-5" />}
             color="text-rose-500"
             bgColor="bg-rose-500/10"
           />
           <StatCard
             label="Weekly Savings"
             value={weeklySavings}
-            icon={<Target className="h-4 w-4 lg:h-6 lg:w-6" />}
+            icon={<Target className="h-4 w-4 lg:h-5 lg:w-5" />}
             color="text-cyan-500"
             bgColor="bg-cyan-500/10"
           />
           <StatCard
             label="Income"
             value={currentMonth.income}
-            icon={<Wallet className="h-4 w-4 lg:h-6 lg:w-6" />}
+            icon={<Wallet className="h-4 w-4 lg:h-5 lg:w-5" />}
             color="text-green-500"
             bgColor="bg-green-500/10"
           />
           <StatCard
             label="Expenses"
             value={currentMonth.expenses}
-            icon={<TrendingDown className="h-4 w-4 lg:h-6 lg:w-6" />}
+            icon={<TrendingDown className="h-4 w-4 lg:h-5 lg:w-5" />}
             color="text-red-500"
             bgColor="bg-red-500/10"
           />
           <StatCard
             label="Savings"
             value={currentMonth.savings}
-            icon={<PiggyBank className="h-4 w-4 lg:h-6 lg:w-6" />}
+            icon={<PiggyBank className="h-4 w-4 lg:h-5 lg:w-5" />}
             color={currentMonth.savings >= 0 ? "text-blue-500" : "text-red-500"}
             bgColor={
               currentMonth.savings >= 0 ? "bg-blue-500/10" : "bg-red-500/10"
@@ -120,11 +120,11 @@ function StatCard({
         >
           {icon}
         </div>
-        <span className="text-sm font-medium lg:text-lg">{label}</span>
+        <span className="text-sm font-medium lg:text-base">{label}</span>
       </div>
       <div className="flex items-baseline gap-1">
         <span
-          className={`text-2xl font-bold tracking-tight ${color} lg:text-4xl`}
+          className={`text-2xl font-bold tracking-tight ${color} lg:text-3xl`}
         >
           {formatCurrency(value)}
         </span>
