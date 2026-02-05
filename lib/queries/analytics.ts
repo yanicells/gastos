@@ -606,46 +606,51 @@ export async function getWeeklySavings(): Promise<{
   data: number;
   error: Error | null;
 }> {
-  const supabase = await createClient();
+  const { data: monthStats, error } = await getCurrentMonthStats();
+
+  if (error) {
+    return { data: 0, error };
+  }
 
   const now = new Date();
   const year = now.getFullYear();
   const month = now.getMonth() + 1;
 
-  const startDate = `${year}-${String(month).padStart(2, "0")}-01`;
-  const endDate = new Date(year, month, 0).toISOString().split("T")[0];
-
   // Calculate number of weeks in the month
-  // Get the number of days in the month
   const daysInMonth = new Date(year, month, 0).getDate();
-  // A month typically has 4-5 weeks. We'll use ceil(daysInMonth / 7)
   const weeksInMonth = Math.ceil(daysInMonth / 7);
 
-  const { data, error } = await supabase
-    .from("transactions")
-    .select("type, amount")
-    .gte("date", startDate)
-    .lte("date", endDate)
-    .is("deleted_at", null);
-
-  if (error) {
-    return { data: 0, error: new Error(error.message) };
-  }
-
-  let monthlyIncome = 0;
-
-  for (const row of data ?? []) {
-    const typeConfig =
-      transactionTypes[row.type as keyof typeof transactionTypes];
-
-    // Only count income
-    if (typeConfig?.category === "income") {
-      monthlyIncome += Number(row.amount);
-    }
-  }
-
   // Weekly savings = monthly income / weeks in month
-  const weeklySavings = monthlyIncome / weeksInMonth;
+  const weeklySavings = monthStats.income / weeksInMonth;
 
   return { data: weeklySavings, error: null };
+}
+
+/**
+ * Get total expenses for the current month.
+ */
+export async function getMonthlyExpenses(): Promise<{
+  data: number;
+  error: Error | null;
+}> {
+  const { data: monthStats, error } = await getCurrentMonthStats();
+
+  if (error) {
+    return { data: 0, error };
+  }
+
+  return { data: monthStats.expenses, error: null };
+}
+
+/**
+ * Get yearly totals (income, expenses, savings) for the current year.
+ */
+export async function getYearlyStats(): Promise<{
+  data: PeriodStats;
+  error: Error | null;
+}> {
+  const now = new Date();
+  const year = now.getFullYear();
+
+  return getAllTimeTotals(year);
 }

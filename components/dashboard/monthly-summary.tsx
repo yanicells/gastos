@@ -7,15 +7,15 @@ import {
   PiggyBank,
   Receipt,
   Calendar,
-  Target,
+  CalendarDays,
 } from "lucide-react";
 import type { PeriodStats } from "@/lib/types/analytics";
 
 interface SummaryStatsProps {
-  currentMonth: PeriodStats;
   todaySpend: number;
   weeklyExpenses: number;
-  weeklySavings: number;
+  monthlyExpenses: number;
+  yearlyStats: PeriodStats;
 }
 
 /**
@@ -32,12 +32,14 @@ function formatCurrency(amount: number): string {
 
 /**
  * Summary stats component with 2x3 grid of stat cards.
+ * Row 1: Today, Weekly, Monthly (expenses)
+ * Row 2: Income, Expenses, Savings (yearly)
  */
 export function SummaryStats({
-  currentMonth,
   todaySpend,
   weeklyExpenses,
-  weeklySavings,
+  monthlyExpenses,
+  yearlyStats,
 }: SummaryStatsProps) {
   return (
     <Card className="h-full flex flex-col">
@@ -46,6 +48,7 @@ export function SummaryStats({
       </CardHeader>
       <CardContent className="flex-1">
         <div className="grid grid-cols-2 gap-4 lg:grid-cols-3 h-full">
+          {/* Row 1: Expense periods */}
           <StatCard
             label="Today"
             value={todaySpend}
@@ -61,33 +64,34 @@ export function SummaryStats({
             bgColor="bg-rose-500/10"
           />
           <StatCard
-            label="Weekly Savings"
-            value={weeklySavings}
-            icon={<Target className="h-4 w-4 lg:h-5 lg:w-5" />}
-            color="text-cyan-500"
-            bgColor="bg-cyan-500/10"
+            label="Monthly"
+            value={monthlyExpenses}
+            icon={<CalendarDays className="h-4 w-4 lg:h-5 lg:w-5" />}
+            color="text-purple-500"
+            bgColor="bg-purple-500/10"
           />
-          <StatCard
-            label="Income"
-            value={currentMonth.income}
-            icon={<Wallet className="h-4 w-4 lg:h-5 lg:w-5" />}
-            color="text-green-500"
-            bgColor="bg-green-500/10"
-          />
+          {/* Row 2: Yearly totals */}
           <StatCard
             label="Expenses"
-            value={currentMonth.expenses}
+            value={yearlyStats.expenses}
             icon={<TrendingDown className="h-4 w-4 lg:h-5 lg:w-5" />}
             color="text-red-500"
             bgColor="bg-red-500/10"
           />
           <StatCard
+            label="Income"
+            value={yearlyStats.income}
+            icon={<Wallet className="h-4 w-4 lg:h-5 lg:w-5" />}
+            color="text-green-500"
+            bgColor="bg-green-500/10"
+          />
+          <StatCard
             label="Savings"
-            value={currentMonth.savings}
+            value={yearlyStats.savings}
             icon={<PiggyBank className="h-4 w-4 lg:h-5 lg:w-5" />}
-            color={currentMonth.savings >= 0 ? "text-blue-500" : "text-red-500"}
+            color={yearlyStats.savings >= 0 ? "text-blue-500" : "text-red-500"}
             bgColor={
-              currentMonth.savings >= 0 ? "bg-blue-500/10" : "bg-red-500/10"
+              yearlyStats.savings >= 0 ? "bg-blue-500/10" : "bg-red-500/10"
             }
           />
         </div>

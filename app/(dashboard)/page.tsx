@@ -1,10 +1,10 @@
 import { Suspense } from "react";
 import { getRecentTransactions } from "@/lib/queries/transactions";
 import {
-  getCurrentMonthStats,
   getTodaySpend,
   getWeeklyExpenses,
-  getWeeklySavings,
+  getMonthlyExpenses,
+  getYearlyStats,
 } from "@/lib/queries/analytics";
 import { Navbar } from "@/components/shared/navbar";
 import { QuickAddForm } from "@/components/dashboard/quick-add-form";
@@ -26,23 +26,23 @@ import { AuthCheck } from "@/components/shared/auth-check";
  */
 async function SummaryStatsSection() {
   const [
-    { data: currentMonthStats },
     { data: todaySpend },
     { data: weeklyExpenses },
-    { data: weeklySavings },
+    { data: monthlyExpenses },
+    { data: yearlyStats },
   ] = await Promise.all([
-    getCurrentMonthStats(),
     getTodaySpend(),
     getWeeklyExpenses(),
-    getWeeklySavings(),
+    getMonthlyExpenses(),
+    getYearlyStats(),
   ]);
 
   return (
     <SummaryStats
-      currentMonth={currentMonthStats}
       todaySpend={todaySpend}
       weeklyExpenses={weeklyExpenses}
-      weeklySavings={weeklySavings}
+      monthlyExpenses={monthlyExpenses}
+      yearlyStats={yearlyStats}
     />
   );
 }
