@@ -76,7 +76,11 @@ export function MonthlyClient({
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <h1 className="text-2xl font-bold tracking-tight">{title}</h1>
           <div className="flex items-center gap-2">
-            <YearSelector value={year} onChange={handleYearChange} years={availableYears} />
+            <YearSelector
+              value={year}
+              onChange={handleYearChange}
+              years={availableYears}
+            />
             <MonthSelector
               value={month}
               onChange={handleMonthChange}
@@ -88,7 +92,9 @@ export function MonthlyClient({
               onClick={() => loadData(year, month)}
               disabled={isPending}
             >
-              <RefreshCw className={`h-4 w-4 ${isPending ? "animate-spin" : ""}`} />
+              <RefreshCw
+                className={`h-4 w-4 ${isPending ? "animate-spin" : ""}`}
+              />
             </Button>
           </div>
         </div>
@@ -107,8 +113,14 @@ export function MonthlyClient({
             />
 
             <div className="grid gap-6 md:grid-cols-2">
-              <CategoryBreakdownList data={data.incomeBreakdown} type="income" />
-              <CategoryBreakdownList data={data.expenseBreakdown} type="expense" />
+              <CategoryBreakdownList
+                data={data.incomeBreakdown}
+                type="income"
+              />
+              <CategoryBreakdownList
+                data={data.expenseBreakdown}
+                type="expense"
+              />
             </div>
           </section>
 

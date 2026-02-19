@@ -63,7 +63,7 @@ export function Navbar() {
                 "px-4 py-2 text-sm font-medium rounded-full transition-all duration-200",
                 pathname === item.href
                   ? "bg-secondary text-secondary-foreground"
-                  : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted",
               )}
             >
               {item.label}
@@ -134,7 +134,7 @@ export function Navbar() {
                               "flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200",
                               isActive
                                 ? "bg-primary text-primary-foreground shadow-sm"
-                                : "text-muted-foreground hover:bg-muted active:scale-[0.98]"
+                                : "text-muted-foreground hover:bg-muted active:scale-[0.98]",
                             )}
                           >
                             <Icon
@@ -142,7 +142,7 @@ export function Navbar() {
                                 "h-5 w-5",
                                 isActive
                                   ? "text-primary-foreground"
-                                  : "text-muted-foreground"
+                                  : "text-muted-foreground",
                               )}
                             />
                             <span className="text-lg font-medium">

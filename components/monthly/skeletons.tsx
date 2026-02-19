@@ -87,7 +87,10 @@ export function MonthlySkeleton() {
               <CardContent className="space-y-6">
                 <div className="grid gap-3 sm:grid-cols-3">
                   {[1, 2, 3].map((metric) => (
-                    <div key={metric} className="rounded-md border p-3 space-y-2">
+                    <div
+                      key={metric}
+                      className="rounded-md border p-3 space-y-2"
+                    >
                       <Skeleton className="h-3 w-14" />
                       <Skeleton className="h-5 w-24" />
                     </div>

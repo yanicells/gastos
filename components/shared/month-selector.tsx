@@ -59,7 +59,7 @@ export function MonthSelector({
           disabled={disabled}
           className={cn(
             "w-[100px] justify-between",
-            !value && "text-muted-foreground"
+            !value && "text-muted-foreground",
           )}
         >
           {selectedLabel}
@@ -96,7 +96,7 @@ export function MonthSelector({
                 "h-8 text-xs font-normal",
                 value === month.value
                   ? "hover:bg-primary/90"
-                  : "hover:bg-accent hover:text-accent-foreground"
+                  : "hover:bg-accent hover:text-accent-foreground",
               )}
               onClick={() => {
                 onChange(month.value);
