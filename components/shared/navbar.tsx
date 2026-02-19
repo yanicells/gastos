@@ -10,6 +10,7 @@ import {
   LayoutDashboard,
   Receipt,
   BarChart3,
+  CalendarRange,
   PieChart,
   Wallet,
 } from "lucide-react";
@@ -39,6 +40,7 @@ export function Navbar() {
     { href: "/", label: "Dashboard", icon: LayoutDashboard },
     { href: "/transactions", label: "Transactions", icon: Receipt },
     { href: "/summary", label: "Summary", icon: BarChart3 },
+    { href: "/monthly", label: "Monthly", icon: CalendarRange },
     { href: "/charts", label: "Charts", icon: PieChart },
     { href: "/totals", label: "Totals", icon: Wallet },
   ];

@@ -30,6 +30,7 @@ interface MonthSelectorProps {
   value: number | null;
   onChange: (month: number | null) => void;
   disabled?: boolean;
+  allowClear?: boolean;
 }
 
 /**
@@ -40,6 +41,7 @@ export function MonthSelector({
   value,
   onChange,
   disabled,
+  allowClear = true,
 }: MonthSelectorProps) {
   const [open, setOpen] = React.useState(false);
 
@@ -69,7 +71,7 @@ export function MonthSelector({
           <span className="text-sm font-medium text-muted-foreground">
             Select Month
           </span>
-          {value && (
+          {allowClear && value && (
             <Button
               variant="ghost"
               size="sm"
