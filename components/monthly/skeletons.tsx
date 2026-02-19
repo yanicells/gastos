@@ -79,46 +79,48 @@ export function MonthlySkeleton() {
         <section className="space-y-4">
           <Skeleton className="h-6 w-36" />
 
-          {[1, 2, 3, 4].map((item) => (
-            <Card key={item}>
-              <CardHeader>
-                <Skeleton className="h-5 w-56" />
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="grid gap-3 sm:grid-cols-3">
-                  {[1, 2, 3].map((metric) => (
-                    <div
-                      key={metric}
-                      className="rounded-md border p-3 space-y-2"
-                    >
-                      <Skeleton className="h-3 w-14" />
-                      <Skeleton className="h-5 w-24" />
-                    </div>
-                  ))}
-                </div>
+          <div className="grid gap-4 xl:grid-cols-2">
+            {[1, 2, 3, 4].map((item) => (
+              <Card key={item} className="h-full">
+                <CardHeader>
+                  <Skeleton className="h-5 w-56" />
+                </CardHeader>
+                <CardContent className="space-y-5">
+                  <div className="grid gap-3 sm:grid-cols-3">
+                    {[1, 2, 3].map((metric) => (
+                      <div
+                        key={metric}
+                        className="rounded-md border p-3 space-y-2"
+                      >
+                        <Skeleton className="h-3 w-14" />
+                        <Skeleton className="h-5 w-24" />
+                      </div>
+                    ))}
+                  </div>
 
-                <div className="grid gap-6 md:grid-cols-2">
-                  {[1, 2].map((col) => (
-                    <div key={col} className="space-y-4">
-                      <Skeleton className="h-5 w-32" />
-                      {[1, 2].map((row) => (
-                        <div key={row} className="space-y-2">
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-2">
-                              <Skeleton className="h-8 w-8 rounded-full" />
-                              <Skeleton className="h-4 w-24" />
+                  <div className="grid gap-5 md:grid-cols-2">
+                    {[1, 2].map((col) => (
+                      <div key={col} className="space-y-3">
+                        <Skeleton className="h-5 w-32" />
+                        {[1, 2].map((row) => (
+                          <div key={row} className="space-y-2">
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-2">
+                                <Skeleton className="h-8 w-8 rounded-full" />
+                                <Skeleton className="h-4 w-24" />
+                              </div>
+                              <Skeleton className="h-4 w-20" />
                             </div>
-                            <Skeleton className="h-4 w-20" />
+                            <Skeleton className="h-2 w-full" />
                           </div>
-                          <Skeleton className="h-2 w-full" />
-                        </div>
-                      ))}
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+                        ))}
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </section>
       </div>
     </main>

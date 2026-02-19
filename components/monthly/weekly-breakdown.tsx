@@ -21,7 +21,7 @@ function BreakdownList({ data, type }: BreakdownListProps) {
   const total = data.reduce((acc, row) => acc + row.total, 0);
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       <h4 className="text-sm font-medium">
         {type === "income" ? "Income by Category" : "Expense by Category"}
       </h4>
@@ -75,24 +75,34 @@ function BreakdownList({ data, type }: BreakdownListProps) {
 }
 
 export function WeeklyBreakdownSection({ weeks }: WeeklyBreakdownProps) {
+  if (weeks.length === 0) {
+    return (
+      <Card>
+        <CardContent className="py-8 text-sm text-muted-foreground">
+          No weekly data available for this month.
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
-    <div className="space-y-4">
+    <div className="grid gap-4 xl:grid-cols-2">
       {weeks.map((week) => (
-        <Card key={`${week.startDate}-${week.endDate}`}>
+        <Card key={`${week.startDate}-${week.endDate}`} className="h-full">
           <CardHeader>
             <CardTitle className="text-base">{week.label}</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-6">
+          <CardContent className="space-y-5">
             <div className="grid gap-3 sm:grid-cols-3">
               <div className="rounded-md border p-3">
                 <p className="text-xs text-muted-foreground">Income</p>
-                <p className="text-base font-semibold text-green-500 tabular-nums">
+                <p className="text-lg font-semibold text-green-500 tabular-nums">
                   ₱{week.totals.income.toLocaleString()}
                 </p>
               </div>
               <div className="rounded-md border p-3">
                 <p className="text-xs text-muted-foreground">Expenses</p>
-                <p className="text-base font-semibold text-red-500 tabular-nums">
+                <p className="text-lg font-semibold text-red-500 tabular-nums">
                   ₱{week.totals.expenses.toLocaleString()}
                 </p>
               </div>
@@ -100,7 +110,7 @@ export function WeeklyBreakdownSection({ weeks }: WeeklyBreakdownProps) {
                 <p className="text-xs text-muted-foreground">Savings</p>
                 <p
                   className={cn(
-                    "text-base font-semibold tabular-nums",
+                    "text-lg font-semibold tabular-nums",
                     week.totals.savings >= 0 ? "text-primary" : "text-red-500",
                   )}
                 >
@@ -109,7 +119,7 @@ export function WeeklyBreakdownSection({ weeks }: WeeklyBreakdownProps) {
               </div>
             </div>
 
-            <div className="grid gap-6 md:grid-cols-2">
+            <div className="grid gap-5 md:grid-cols-2">
               <BreakdownList data={week.incomeBreakdown} type="income" />
               <BreakdownList data={week.expenseBreakdown} type="expense" />
             </div>
