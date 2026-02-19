@@ -1,11 +1,12 @@
 import { createClient } from "@/lib/supabase/server";
-import { transactionTypes } from "@/lib/data/types";
+import { transactionTypes, type TransactionTypeKey } from "@/lib/data/types";
 import type { CategoryBreakdown } from "@/lib/types/transaction";
 import type {
   MonthlySummaryRow,
   YearlySummaryTotals,
   PeriodStats,
   RollingAverages,
+  MonthlyBreakdown,
 } from "@/lib/types/analytics";
 
 /**
@@ -511,6 +512,201 @@ export async function getAllTimeTotals(
 
   return {
     data: { income, expenses, savings: income - expenses },
+    error: null,
+  };
+}
+
+/**
+ * Get month-level totals and weekly breakdowns for a selected year and month.
+ * - Weeks start on Monday
+ * - Overlapping weeks are clipped to the selected month boundaries
+ */
+export async function getMonthlyBreakdown(
+  year: number,
+  month: number,
+): Promise<{
+  data: MonthlyBreakdown;
+  error: Error | null;
+}> {
+  const supabase = await createClient();
+
+  const monthStart = new Date(year, month - 1, 1);
+  const monthEnd = new Date(year, month, 0);
+
+  const formatDate = (date: Date) => {
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, "0");
+    const d = String(date.getDate()).padStart(2, "0");
+    return `${y}-${m}-${d}`;
+  };
+
+  const parseDateOnly = (value: string) => {
+    const [y, m, d] = value.split("-").map(Number);
+    return new Date(y, m - 1, d);
+  };
+
+  const startDate = formatDate(monthStart);
+  const endDate = formatDate(monthEnd);
+
+  const { data, error } = await supabase
+    .from("transactions")
+    .select("date, type, amount")
+    .gte("date", startDate)
+    .lte("date", endDate)
+    .is("deleted_at", null);
+
+  if (error) {
+    return {
+      data: {
+        year,
+        month,
+        totals: { income: 0, expenses: 0, savings: 0 },
+        incomeBreakdown: [],
+        expenseBreakdown: [],
+        weekly: [],
+      },
+      error: new Error(error.message),
+    };
+  }
+
+  const shortDateFormatter = new Intl.DateTimeFormat("en-US", {
+    month: "short",
+    day: "numeric",
+  });
+
+  const weeklyBuckets: Array<{
+    weekNumber: number;
+    startDate: string;
+    endDate: string;
+    totals: PeriodStats;
+    incomeMap: Map<string, CategoryBreakdown>;
+    expenseMap: Map<string, CategoryBreakdown>;
+  }> = [];
+
+  let cursor = new Date(monthStart);
+  let weekNumber = 1;
+
+  while (cursor <= monthEnd) {
+    const dayOfWeek = cursor.getDay();
+    const daysToSubtract = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+
+    const weekStart = new Date(cursor);
+    weekStart.setDate(cursor.getDate() - daysToSubtract);
+
+    const weekEnd = new Date(weekStart);
+    weekEnd.setDate(weekStart.getDate() + 6);
+
+    const clippedStart =
+      weekStart < monthStart ? new Date(monthStart) : weekStart;
+    const clippedEnd = weekEnd > monthEnd ? new Date(monthEnd) : weekEnd;
+
+    weeklyBuckets.push({
+      weekNumber,
+      startDate: formatDate(clippedStart),
+      endDate: formatDate(clippedEnd),
+      totals: { income: 0, expenses: 0, savings: 0 },
+      incomeMap: new Map<string, CategoryBreakdown>(),
+      expenseMap: new Map<string, CategoryBreakdown>(),
+    });
+
+    cursor = new Date(clippedEnd);
+    cursor.setDate(clippedEnd.getDate() + 1);
+    weekNumber += 1;
+  }
+
+  const totals: PeriodStats = {
+    income: 0,
+    expenses: 0,
+    savings: 0,
+  };
+
+  const incomeMap = new Map<string, CategoryBreakdown>();
+  const expenseMap = new Map<string, CategoryBreakdown>();
+
+  const aggregateType = (
+    map: Map<string, CategoryBreakdown>,
+    type: TransactionTypeKey,
+    amount: number,
+  ) => {
+    const current = map.get(type);
+    if (current) {
+      current.total += amount;
+      current.count += 1;
+      return;
+    }
+
+    map.set(type, {
+      type,
+      total: amount,
+      count: 1,
+    });
+  };
+
+  for (const row of data ?? []) {
+    const amount = Number(row.amount);
+    const transactionType = row.type as TransactionTypeKey;
+    const typeConfig = transactionTypes[transactionType];
+
+    if (!typeConfig) continue;
+
+    const rowDate = parseDateOnly(row.date);
+    const rowDateString = formatDate(rowDate);
+
+    const week = weeklyBuckets.find(
+      (bucket) =>
+        rowDateString >= bucket.startDate && rowDateString <= bucket.endDate,
+    );
+
+    if (typeConfig.category === "income") {
+      totals.income += amount;
+      aggregateType(incomeMap, transactionType, amount);
+
+      if (week) {
+        week.totals.income += amount;
+        aggregateType(week.incomeMap, transactionType, amount);
+      }
+    } else {
+      totals.expenses += amount;
+      aggregateType(expenseMap, transactionType, amount);
+
+      if (week) {
+        week.totals.expenses += amount;
+        aggregateType(week.expenseMap, transactionType, amount);
+      }
+    }
+  }
+
+  totals.savings = totals.income - totals.expenses;
+
+  const toSortedBreakdown = (map: Map<string, CategoryBreakdown>) =>
+    Array.from(map.values()).sort((a, b) => b.total - a.total);
+
+  const weekly = weeklyBuckets.map((bucket) => {
+    bucket.totals.savings = bucket.totals.income - bucket.totals.expenses;
+
+    const start = parseDateOnly(bucket.startDate);
+    const end = parseDateOnly(bucket.endDate);
+
+    return {
+      weekNumber: bucket.weekNumber,
+      label: `Week ${bucket.weekNumber} (${shortDateFormatter.format(start)} - ${shortDateFormatter.format(end)})`,
+      startDate: bucket.startDate,
+      endDate: bucket.endDate,
+      totals: bucket.totals,
+      incomeBreakdown: toSortedBreakdown(bucket.incomeMap),
+      expenseBreakdown: toSortedBreakdown(bucket.expenseMap),
+    };
+  });
+
+  return {
+    data: {
+      year,
+      month,
+      totals,
+      incomeBreakdown: toSortedBreakdown(incomeMap),
+      expenseBreakdown: toSortedBreakdown(expenseMap),
+      weekly,
+    },
     error: null,
   };
 }

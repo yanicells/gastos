@@ -1,3 +1,5 @@
+import type { CategoryBreakdown } from "@/lib/types/transaction";
+
 /** Monthly summary row type */
 export interface MonthlySummaryRow {
   month: number;
@@ -29,4 +31,25 @@ export interface RollingAverages {
   daily: PeriodStats;
   weekly: PeriodStats;
   monthly: PeriodStats;
+}
+
+/** Weekly breakdown inside a selected month */
+export interface WeeklyBreakdown {
+  weekNumber: number;
+  label: string;
+  startDate: string;
+  endDate: string;
+  totals: PeriodStats;
+  incomeBreakdown: CategoryBreakdown[];
+  expenseBreakdown: CategoryBreakdown[];
+}
+
+/** Monthly analytics payload including weekly breakdowns */
+export interface MonthlyBreakdown {
+  year: number;
+  month: number;
+  totals: PeriodStats;
+  incomeBreakdown: CategoryBreakdown[];
+  expenseBreakdown: CategoryBreakdown[];
+  weekly: WeeklyBreakdown[];
 }

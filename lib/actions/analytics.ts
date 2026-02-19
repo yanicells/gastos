@@ -9,6 +9,7 @@ import {
   getCurrentMonthStats,
   getRollingAverages,
   getAllTimeTotals,
+  getMonthlyBreakdown,
 } from "@/lib/queries/analytics";
 
 /**
@@ -31,7 +32,7 @@ export async function fetchMonthlyTrend(year: number) {
 export async function fetchCategoryBreakdown(
   startDate?: string,
   endDate?: string,
-  category?: "expense" | "income"
+  category?: "expense" | "income",
 ) {
   return getCategoryBreakdown(startDate, endDate, category);
 }
@@ -42,7 +43,7 @@ export async function fetchCategoryBreakdown(
 export async function fetchTopCategories(
   limit?: number,
   startDate?: string,
-  endDate?: string
+  endDate?: string,
 ) {
   return getTopCategories(limit, startDate, endDate);
 }
@@ -73,4 +74,11 @@ export async function fetchRollingAverages(year?: number) {
  */
 export async function fetchAllTimeTotals(year?: number, month?: number) {
   return getAllTimeTotals(year, month);
+}
+
+/**
+ * Server action to fetch monthly totals and weekly breakdown.
+ */
+export async function fetchMonthlyBreakdown(year: number, month: number) {
+  return getMonthlyBreakdown(year, month);
 }
